@@ -1,0 +1,190 @@
+<?php
+ header("content-disposition: attachment;filename=formation-realise-".time().".xls");
+  
+ ?><!-- Aside (Left Column) -->
+<hr class="noscreen" />
+
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">
+        Reporting annuel &rsaquo; Formations réalisées
+        <?php 
+        if(count($this->sortString)) :
+          echo '<span class="sortTitle">';
+          if(array_key_exists('pole', $this->sortString)) echo ' &rsaquo; Pôle '.$this->sortString['pole'];
+          if(array_key_exists('direction', $this->sortString)) echo ' &rsaquo; '.$this->sortString['direction'];
+          if(array_key_exists('organisme', $this->sortString)) echo ' &rsaquo; '.$this->sortString['organisme'];
+          if(array_key_exists('type_formation', $this->sortString)) echo ' &rsaquo; '.$this->sortString['type_formation'];
+          echo ' &rsaquo; ';
+          echo (array_key_exists('periode', $this->sortString)) ? $this->sortString['periode'] : date('Y');
+          echo '</span>';
+       endif;
+        ?>
+    </h3>
+    
+    <!-- Liste des formations  -->
+    <table class="list">
+        <tr>
+            <th>Direction</th>
+            <th>Intitul&eacute;</th>
+            <th width="55">Période</th>
+            <th>Durée<br>(jour)</th>
+            <th>Nb H</th>
+            <th>Total H</th>
+            <th>Auditeur<br>prévu</th>
+            <th>Auditeur<br>présent</th>
+            <th>Taux<br>présence</th>
+            <th>Organisme</th>
+            <th>Type</th>
+            <th align="center">Côut <br>direct</th>
+            <th align="center">Côut <br>indirect</th>
+            <th align="center">Côut <br>total</th>
+        
+        </tr>
+        <?php $totalJour = 0; $totalHeure = 0; $totalHeureCumule = 0;
+              $totalPrevu = 0; $totalPresent = 0; $totalTauxPresence = 0;
+              $totalCoutDirect = 0; $totalCoutIndirect = 0; $totalCout = 0;
+             for($mois=0; $mois<=count(Misc_Utils::getMoisAnnee()); $mois++) : 
+              if(array_key_exists($mois, $this->formationRealise)) : 
+              $nbJourMois = 0; $nbHeureMois = 0; $nbTotalHeureMois = 0;
+              $nbPrevuMois = 0; $nbPresentMois = 0; $tauxPresenceMois = 0;
+              $coutDirectMois = 0; $coutIndirectMois = 0; $coutTotalMois = 0;
+              
+?>
+        <tr> <td></td>
+             <td class="groupBy"><?php echo ($mois==0 ? 'non défini' : Misc_Utils::getMoisAnnee($mois)); ?></td>
+             <td colspan="12"></td>
+       </tr>
+            <?php 
+                  
+                  $formations = $this->formationRealise[$mois];
+                  foreach($formations as $formation) { ?>
+            <tr>
+                <tr>
+                <td><?php echo $formation['direction']; ?></td>
+                <td><?php echo $formation['intitule']; ?>
+                     </td>
+                <td align="center">
+                     <?php if($mois<>0) {
+                              $date = explode("-",$formation['date_debut']);
+                              echo $date[2].'/'.$date[1];
+                           } else echo '-';
+                    ?> -
+                    <?php if($mois<>0) {
+                              $date = explode("-",$formation['date_fin']);
+                              echo $date[2].'/'.$date[1];
+                           } else echo '-';
+                 ?></td>
+                <td align="center"> 
+                    <?php echo $formation['nombre_jour']; 
+                          $nbJourMois += $formation['nombre_jour'];
+                          
+                    ?>
+                </td>
+                <td align="center"> 
+                       <?php $nbHeure = $formation['nombre_jour']*$formation['nombre_heure_jour'];
+                             echo $nbHeure;
+                             $nbHeureMois += $nbHeure;
+                             
+                       ?>
+                </td>
+                <td align="center"> 
+                    <?php $nbTotalHeure = $nbHeure*$formation['nbAuditeurPresent'];
+                          echo $nbTotalHeure;
+                          $nbTotalHeureMois += $nbTotalHeure;
+                         
+                    ?>
+                </td>
+                <td align="center"> 
+                    <?php $nbPrevuMois += $formation['auditeur_prevu'];
+                          echo $formation['auditeur_prevu'];
+                          
+                    ?>
+                </td>
+                <td align="center"> 
+                    <?php $nbPresentMois += $formation['nbAuditeurPresent'];
+                          echo $formation['nbAuditeurPresent'];
+                          
+                    ?>
+                </td>
+                <td align="center"> 
+                    <?php 
+                          $taux = floor(($formation['nbAuditeurPresent']/$formation['auditeur_prevu'])*100);
+                          echo $taux.'%';
+                    ?>
+                </td>
+                <td align="center"> <?php if($formation['organisme']<>'') echo $formation['organisme']; else echo 'FORMATEUR INTERNE'?></td>
+                <td align="center"> <?php echo $formation['type_formation'];?></td>
+                <td align="center"> 
+                    <?php $coutDirectMois += $formation['cout_direct'];
+                          echo number_format($formation['cout_direct']);?>
+                </td>
+                <td align="center"> 
+                    <?php $coutIndirectMois += $formation['cout_indirect'];
+                          echo number_format($formation['cout_indirect']);?>
+                </td>
+                  <td align="center"> 
+                    <?php $coutSession = $formation['cout_indirect'] + $formation['cout_direct'];
+                          echo number_format($coutSession);
+                          $coutTotalMois += $coutSession;
+                    ?>
+                </td>
+                
+            </tr>
+            <?php } ?>
+         <!-- SOUS TOTAL -->
+        <tr class="sub-result">
+            <td></td>
+            <td align="center">sous total</td>
+            <td></td>
+            <td align="center"><?php echo $nbJourMois;?> jr</td>
+            <td align="center"><?php echo $nbHeureMois;?> h</td>
+            <td align="center"><?php echo $nbTotalHeureMois;?> h</td>
+            <td align="center"><?php echo $nbPrevuMois;?></td>
+            <td align="center"><?php echo $nbPresentMois;?></td>
+            <td align="center"><?php echo floor(($nbPresentMois/$nbPrevuMois)*100);?>%</td>
+            <td colspan='2'></td>
+            <td align="center"><?php echo number_format($coutDirectMois);?></td>
+            <td align="center"><?php echo number_format($coutIndirectMois);?></td>
+            <td align="center"><?php echo number_format($coutTotalMois);?></td>
+            <?php
+                $totalHeureCumule += $nbTotalHeureMois;
+                $totalHeure += $nbHeureMois;
+                $totalJour += $nbJourMois;
+                $totalPrevu += $nbPrevuMois;
+                $totalPresent += $nbPresentMois;
+                $totalCoutDirect += $coutDirectMois;
+                $totalCoutIndirect += $coutIndirectMois;
+                $totalCout += $coutTotalMois;
+                
+            ?>
+       </tr>   
+       <tr><td colpan="10"></td></tr>   
+       <?php endif; ?>
+       <?php endfor; ?>
+        <!-- TOTAL -->
+        <tr class="result">
+            <td align="center">sous total</td>
+            <td></td>
+            <td></td>
+            <td align="center"><?php echo $totalJour;?> jr</td>
+            <td align="center"><?php echo $totalHeure;?> h</td>
+            <td align="center"><?php echo $totalHeureCumule;?> h</td>
+            <td align="center"><?php echo $totalPrevu;?></td>
+            <td align="center"><?php echo $totalPresent;?></td>
+            <td align="center"><?php if($totalPrevu) echo floor(($totalPresent/$totalPrevu)*100); else echo '';?>%</td>
+            <td colspan='2'></td>
+            <td align="center"><?php echo number_format($totalCoutDirect);?></td>
+            <td align="center"><?php echo number_format($totalCoutIndirect);?></td>
+            <td align="center"><?php echo number_format($totalCout);?></td>
+          
+       </tr>   
+    </table>
+
+
+</div> 
+
+

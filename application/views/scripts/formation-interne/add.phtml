@@ -1,0 +1,25 @@
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h3 class="tit">Enregistrer formateur interne</h3>
+   
+    <div class="box-content">
+        <?php
+        $this->form->setAction($this->url(array("controller" => "formation-interne", "action" => "save-form")));
+        echo $this->form;
+        ?>
+        <div class="cleaner"></div>
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="actionBar">
+        
+        <a href="<?php echo $this->url(array('controller' => 'formation-interne', 'action' => 'index','id_formation' => $this->idFormation), null, true); ?>" class="list">
+            retour
+        </a>        
+    </div>
+    
+</div> <!-- /content -->
+
+
+

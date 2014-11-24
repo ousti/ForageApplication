@@ -1,0 +1,129 @@
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit"><?php echo $this->salarie->getNom().' '.$this->salarie->getPrenoms();?></h3>
+  
+    
+    <div class="f-lef" style="float:left; margin-right: 100px">
+       <?php $path = 'http://10.242.69.11/photoocit/';
+             $file = $path.$this->salarie->getMatricule();
+             if(@fopen($file.'.jpg', 'r'))
+                 $src = $file.'.jpg';
+             else if(@fopen($file.'.JPG', 'r'))
+                 $src = $file.'.JPG';
+             else
+                 $src = $this->baseUrl().'/images/unknown.gif';
+             //echo $src;
+      ?>
+            <img src="<?php echo $src; ?>" width="130" height="130" />
+    </div>
+    
+
+   <div class="f-righ">
+	<p class="t-justify">
+            <!-- Infos Generales http://intranetocit/photoocit/2518.jpg http://intranetocit/photoocit/929.jpg -->
+            <table style="border:none;">
+                <tr>
+                    <td class="label"> <strong>Matricule : </strong> <?php echo $this->salarie->getMatricule();?></td>
+                    <td class="label"> <strong>Genre : </strong> <?php echo $this->salarie->getGenre();?></td>
+                </tr>
+                <tr>
+                    <td class="label"> <strong>Né(e) le : </strong> <?php echo $this->salarie->getDate_naissance();?></td>
+                    <td class="label"> <strong>Embauché le : </strong> <?php echo $this->salarie->getDate_embauche();?></td>
+                </tr>
+                <tr>
+                    <td class="label"> <strong>Nationalité : </strong> <?php echo $this->salarie->getNationalite();?></td>
+                    <td class="label"> <strong>CNPS : </strong><?php echo $this->salarie->getCnps();?></td>
+                </tr>
+                <tr>
+                    <td class="label"> <strong>Fonction : </strong><?php echo $this->salarie->getFonction();?></td>
+                    <td class="label"> <strong>N+1 : </strong>
+                         <?php if($this->superieur<>NULL) 
+                                echo $this->superieur['nom'].' '.$this->superieur['prenoms'].' ('.$this->superieur['matricule'].')';
+                               else
+                                echo '<span class="red">non renseigné</span>';
+                         ?></td>
+                </tr>
+              </table>
+   </div>
+  
+   <div class="clear"></div>
+   
+   <h5> [ <?php echo count($this->formationRecues);?> formations suivies ]</h5>
+   <h3> Formations suivies </h3>
+ 
+    <!-- Liste des formations  -->
+    <table class="list">
+        <tr>
+            <th>Intitul&eacute;</th>
+            <th >Période</th>
+            <th>Durée <br> jours</th>
+            <th>Nbre<br>d'heures</th>
+            <th>Type</th>
+            <th>Organisme</th>
+            <th>Lieu<br>formation</th>
+        </tr>
+        <?php $totalJour = 0; $totalHeure = 0; 
+             ?>
+         <?php  foreach($this->formationRecues as $formation) { ?>
+            <tr>
+                <td> <?php echo $formation['intitule']; ?> </td>
+                <td align="center">
+                     <?php  echo date('d.m.Y',strtotime($formation['date_debut']));
+                    ?> au
+                    <?php echo date('d.m.Y',strtotime($formation['date_fin']));
+                 ?></td>
+                <td align="center"> 
+                    <?php  $totalJour += $formation['nombre_jour'];
+                           echo $formation['nombre_jour'];
+                    ?>
+                </td>
+                <td align="center"> <?php $totalHeure += $formation['nombre_heure_jour'];
+                echo $formation['nombre_heure_jour'];?></td>
+                 <td align="center"> <?php echo $formation['type_formation'];?></td>
+                <td> <?php echo ($formation['type_formateur']== 0) ? 'Formateur interne' : $formation['organisme'];?></td>
+                <td> <?php echo $formation['localisation'];?></td>
+                </td>
+            </tr>
+            
+        <?php } ?>
+         <!-- TOTAL -->
+        <tr class="result">
+            <td align="center">TOTAL</td>
+            <td></td>
+            <td align="center"><?php echo  $totalJour;?>jr</td>
+            <td align="center"><?php echo  $totalHeure;?>H</td>
+            <td></td>
+            <td colspan="3"></td>  
+       </tr>
+    </table>
+
+
+</div> <!-- /content -->
+
+
+
+   <!-- DETAIL d'UN SALARIE 
+   <?php if(isset($this->salarie) and $this->salarie<>NULL) : ?>
+        
+            <h4>Formations recues</h4>
+            <table style="border:none;">
+                <tr>
+                    <th>Intitulé</th>
+                    <th>Débuté le</th>
+                    <th>Fini le</th>
+                </tr>
+                <?php foreach($this->formationRecues as $formation) : ?>
+                <tr>
+                    <td><?php echo $formation['intitule'];?></td>
+                    <td><?php echo $formation['date_debut'];?></td>
+                    <td><?php echo $formation['date_fin'];?></td>
+                </tr>
+                <?php endforeach; ?>
+                
+              </table>
+</p>
+    </div> 
+   <?php endif; ?> -->

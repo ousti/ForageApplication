@@ -1,0 +1,187 @@
+<?php
+
+// Init Tab
+$totalByEntite = array();
+$totalGenre = array();
+$totalGenreByEntite = array();
+$totalCategorieByEntiteByDomaine = array();
+$totalGeneralByEntite = array();
+
+foreach($this->entites as $entite) {
+   $en = $entite['id'];
+   $totalByEntite[$en] = 0; 
+   $totalGenreByEntite[$en] = 0; 
+   $totalGeneralByEntite[$en] = 0; 
+   $totalByDomaine[$en] = 0; 
+   foreach($this->domaines as $domaine) :
+       $totalGenre[$domaine['id']][$en] = 0;
+       $totalCategorieByEntiteByDomaine[$domaine['id']][$en] = 0;
+   endforeach;
+}
+
+?>
+<!-- ***************** CONTENT (Right Column) **********************  -->
+   
+     <br/><br/>
+     <h4>Répartition des participants aux Actions de Formations Réalisées par catégorie socioprofessionnelle</h4>
+   
+    <!-- Entete du Tableau  -->
+    <table class="list">
+        <tr>
+            <td colspan='2' style='border:none'></td>
+            <?php $nbDomaines = count($this->domaines)+1;
+                  foreach($this->domaines as $domaine) :  ?>
+                 <td colspan='<?php echo $nbDomaines;?>' class='collapse'><?php echo $domaine['domaine_formation'];?></td>
+            <?php endforeach;?>
+            <td colspan='4' class='collapse total'>TOTAL GENERAL OCIT</td>
+        </tr>
+        
+        <tr>
+            <td colspan='2' style='border-top:none'> </td>
+            <?php $col = $nbDomaines; // +1 for column total
+                  for($i=0;$i<$col;$i++) :
+                  foreach($this->entites as $entite) : 
+             ?>
+            <!-- COLUM FOR ENTITIES UNDER DOMAINS -->
+            <?php if($i==$col-1) $addClass = 'total-child'; else $addClass=''; ?>
+            <td class='collapse-child <?php echo $addClass;?>'><?php echo $entite['entite'];?></td>
+            <?php endforeach; ?>
+            <?php if($i<$col-1) : ?>
+            <td class='collapse-child'> total</td>
+            <?php endif;?>
+            <?php endfor; ?>
+            
+            <td class='collapse-child total'>TOTAL</td>
+        </tr>
+        
+        <?php $genres = array('Hommes'=>'Masculin','Femmes'=>'Féminin'); ?>
+        
+        <?php foreach($this->categories as $cKey=>$cValueArray) { ?>
+        <tr>
+            <td rowspan='4' align='center' valign='absmiddle'><?php echo $cKey;?></td> 
+        </tr>
+       
+        <?php foreach($genres as $gKey=>$gValue) : 
+              $totalGenres = 0; ?>
+        <tr><td><?php echo $gKey; ?></td> 
+             
+           <?php foreach($this->domaines as $domaine) : 
+                 $totalDomaine = 0;
+           ?>
+                 
+                <?php foreach($this->entites as $entite) :  ?>
+                    <td align="center"> 
+                        <?php 
+                            if(array_key_exists($domaine['id'], $this->repartitionParticipantCategorie) and 
+                               array_key_exists($entite['id'], $this->repartitionParticipantCategorie[$domaine['id']]) and
+                               array_key_exists($gValue,$this->repartitionParticipantCategorie[$domaine['id']][$entite['id']])) : 
+                               $current = $this->repartitionParticipantCategorie[$domaine['id']][$entite['id']][$gValue]; 
+                               $count = 0; 
+                               foreach($cValueArray as $idCategorie){
+                                   if(in_array($idCategorie,array_keys($current)))
+                                      $count+= count($current[$idCategorie]);
+                               }
+                              echo $count;
+                              $totalDomaine += $count;
+                              $totalByEntite[$entite['id']] += $count; 
+                              $totalGenre[$domaine['id']][$entite['id']] += $count ;
+                              
+                            endif;
+ 
+                        ?>
+                    </td>
+                <?php endforeach; ?>
+                <!-- total by domaine -->
+                <td class="total" align="center"> <?php echo $totalDomaine; ?></td> 
+           <?php endforeach; ?>
+            
+             <!-- total by entite -->
+             <?php foreach($this->entites as $entite) :  ?>
+                 <td  align="center"> <?php 
+                            echo $totalByEntite[$entite['id']]; 
+                            $totalGeneralByEntite[$entite['id']] += $totalByEntite[$entite['id']]; 
+                            
+                      ?> </td> 
+             <?php  endforeach; ?>
+                 <!-- total general -->
+                 <td class="total" align="center"> <?php echo array_sum($totalByEntite); 
+                           foreach($this->entites as $entite) {
+                            $en = $entite['id'];
+                            $totalByEntite[$en] = 0;  
+                           }
+                       ?>
+                 </td>
+        </tr>
+        <?php endforeach; ?>   
+        
+        <!-- TOTAL PAR GENRE -->
+         <tr><td class="collapse-child">Total <?php echo $cKey;?> </td> 
+           
+                <?php foreach($this->domaines as $domaine) : 
+                      
+                ?>
+                    <?php foreach($this->entites as $entite) :  ?>
+                       <td align="center" class="collapse-child"> 
+                           <?php 
+                                 echo $totalGenre[$domaine['id']][$entite['id']];
+                                 $totalGenreByEntite[$entite['id']] += $totalGenre[$domaine['id']][$entite['id']];
+                                 $totalCategorieByEntiteByDomaine[$domaine['id']][$entite['id']] += $totalGenre[$domaine['id']][$entite['id']]; 
+                           ?>
+                       </td>
+                   <?php  endforeach; ?>
+                  <!-- total by domaine -->
+                <td class="collapse-child" align="center"> <?php echo array_sum($totalGenre[$domaine['id']]); ?></td> 
+               <?php  endforeach; ?>
+                
+             <!-- total by entite -->
+             <?php foreach($this->entites as $entite) :  ?>
+                 <td  align="center" class="collapse-child"> <?php 
+                            echo $totalGenreByEntite[$entite['id']]; 
+                            
+                      ?> </td> 
+             <?php  endforeach; ?>
+                 <!-- total general -->
+                 <td class="collapse-child" align="center"> <?php echo array_sum($totalGenreByEntite); ?>
+                 </td>
+
+        </tr>
+      
+            <?php foreach($this->entites as $entite) {
+                 $en = $entite['id'];
+                 $totalGenreByEntite[$entite['id']] = 0;
+                 foreach($this->domaines as $domaine)
+                     $totalGenre[$domaine['id']][$en] = 0;
+                 }
+              ?>
+     <?php } ?>
+        
+        
+      <!-- ******** TOTAL GENERAL ************ ---->
+      <tr>
+            <td colspan='2' class="collapse" align="center"> TOTAL GENERAL </td>
+              <?php foreach($this->domaines as $domaine) : ?>
+                <?php foreach($this->entites as $entite) :  ?>
+                    <td align="center"  class="collapse"> 
+                        <?php echo $totalCategorieByEntiteByDomaine[$domaine['id']][$entite['id']]; ?>
+                    </td>
+                <?php endforeach; ?>
+                <!-- total by domaine -->
+                <td class="collapse" align="center"> 
+                    <?php echo array_sum($totalCategorieByEntiteByDomaine[$domaine['id']]); ?>
+                </td> 
+           <?php endforeach; ?>
+           <!-- total by entite -->
+           <?php foreach($this->entites as $entite) :  ?>
+                 <td  align="center" class="collapse"> <?php 
+                            echo $totalGeneralByEntite[$entite['id']]; 
+                            
+                      ?> </td> 
+           <?php  endforeach; ?>
+           <!-- total general -->
+           <td class="collapse" align="center"> <?php echo array_sum($totalGeneralByEntite); ?>
+           </td>
+     </tr>
+    
+
+        
+    </table>

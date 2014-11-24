@@ -1,0 +1,218 @@
+<?php
+
+$totalCoutParEntite = array();
+$tauxRealisationBudgetParEntite = array();
+foreach($this->entites as $entite) {
+  $totalCoutParEntite[$entite['entite']] = 0;
+  $tauxRealisationBudgetParEntite[$entite['entite']] = 0;
+}
+
+
+?>
+<!-- ***************** CONTENT (Right Column) **********************  -->
+ 
+   <!-- 
+       ETAT DES ACTIONS DE FORMATIONS REALISEES :: faire ajaxLink
+    -->
+    <h4>Etat Financier des Actions de Formations Réalisées</h4>
+    <div id='etat-financier'>
+    <!-- Entete du Tableau  -->
+    <table class="list">
+        
+        <!-- LIGNE DOMAINE -->
+        <tr>
+            <td colspan='2' style='border:none'></td>
+            <?php $nbDomaines = count($this->domaines)+1;
+                  foreach($this->domaines as $domaine) :  ?>
+                 <td colspan='<?php echo $nbDomaines;?>' class='collapse'><?php echo $domaine['domaine_formation'];?></td>
+            <?php endforeach;?>
+            <td colspan='4' class='collapse total'>TOTAL GENERAL OCIT</td>
+            
+        </tr>
+        
+        <!-- LIGNE ENTITE -->
+        <tr>
+            <td colspan='2' style='border-top:none'> </td>
+            <?php $col = $nbDomaines; // +1 for column total
+                  $totalDomaineByEntite = array();
+                  for($i=0;$i<$col;$i++) :
+                  foreach($this->entites as $entite) : 
+                      $totalDomaineByEntite[$entite['id']] = 0;
+             ?>
+            <?php if($i==$col-1) $addClass = 'total-child'; else $addClass=''; ?>
+            <td class='collapse-child <?php echo $addClass;?>'><?php echo $entite['entite'];?></td>
+            <?php endforeach; ?>
+            <?php if($i<$col-1) : ?>
+            <td class='collapse-child'> total</td>
+            <?php endif;?>
+            <?php endfor; ?>
+            
+            <td class='collapse-child total'>TOTAL</td>
+        </tr>
+
+        <!-- Cout direct mensuel -->
+        <tr>
+            <td colspan='2'>Coût Mensuel (FCFA)</td>
+             <?php 
+                foreach($this->domaines as $domaine) : 
+                    $df = $domaine['domaine_formation'];
+                  foreach($this->entites as $entite):
+                    $en = $entite['entite'];
+              ?>
+            <td align="center">
+                <?php if(array_key_exists($domaine['domaine_formation'], $this->budgetDomaineMoisEnCours) and
+                            array_key_exists($entite['entite'], $this->budgetDomaineMoisEnCours[$domaine['domaine_formation']])) 
+                      { echo number_format($this->budgetDomaineMoisEnCours[$domaine['domaine_formation']][$entite['entite']]);
+                        $totalCoutParEntite[$entite['entite']] += $this->budgetDomaineMoisEnCours[$domaine['domaine_formation']][$entite['entite']];
+                      }
+                      else
+                          echo '';
+                    ?>
+            </td> 
+            <?php endforeach;   ?>
+            <!-- sous total par domaine -->
+            <td align="center"  class="bck-color"> 
+                <?php if(array_key_exists($domaine['domaine_formation'], $this->budgetDomaineMoisEnCours)) 
+                        echo number_format(array_sum($this->budgetDomaineMoisEnCours[$domaine['domaine_formation']])); ?>
+            </td>
+             <?php endforeach; ?>
+            <!-- total realises par entites -->
+           <?php 
+                $totalRealise = 0;
+                foreach($this->entites as $entite): 
+           ?>
+                <td align="center"> 
+                    <?php echo number_format($totalCoutParEntite[$entite['entite']]); $totalRealise+= $totalCoutParEntite[$entite['entite']];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL REALISE -->
+           <td align="center" class="bck-color"><?php echo number_format($totalRealise);?> </td>
+         </tr>
+         
+         
+         
+        <!-- budget annuel alloué -->
+        <tr id="bck-color">
+            <td colspan='2'>Budget  Annuel Alloué ( FCFA)</td> 
+            <?php foreach($this->domaines as $domaine) :
+                  $totalByDomaine[$domaine['id']] = 0;
+                  foreach($this->entites as $entite) :
+                     $totalByDomaine[$domaine['id']] += $this->budgetDomaine[$domaine['id']][$entite['id']];
+                     $totalDomaineByEntite[$entite['id']] += $this->budgetDomaine[$domaine['id']][$entite['id']] ;
+                     
+            ?>
+            <td> <?php echo number_format($this->budgetDomaine[$domaine['id']][$entite['id']]); ?> </td>
+            <?php endforeach; ?>
+            <!-- sous domaine -->
+            <td><?php echo number_format($totalByDomaine[$domaine['id']]);?></td>
+            <?php endforeach; ?>
+            <!-- total par entites -->
+            <?php 
+                 $totalPrevu = 0;
+                 foreach($this->entites as $entite): 
+                
+            ?>
+                 <td align="center"> 
+                     <?php echo number_format($totalDomaineByEntite[$entite['id']]);?>
+                 </td> 
+            <?php endforeach;?>
+            <!-- total general -->
+            <td align="center" class="bck-color"><?php echo number_format(array_sum($totalDomaineByEntite));?> </td>
+         </tr>
+       
+        
+      
+        <!-- Bugdet Annuel executé -->
+        <tr>
+            <td colspan='2'>Budget Annuel Exécuté (FCFA)</td>
+             <?php 
+                foreach($this->domaines as $domaine) : 
+                    $df = $domaine['domaine_formation'];
+                  foreach($this->entites as $entite):
+                    $en = $entite['entite'];
+              ?>
+            <td align="center">
+                <?php if(array_key_exists($domaine['domaine_formation'], $this->budgetAnnuelExecuteParDomaine) and
+                            array_key_exists($entite['entite'], $this->budgetAnnuelExecuteParDomaine[$domaine['domaine_formation']])) 
+                      { 
+                        echo number_format($this->budgetAnnuelExecuteParDomaine[$domaine['domaine_formation']][$entite['entite']]);
+                        $totalCoutParEntite[$entite['entite']] += $this->budgetAnnuelExecuteParDomaine[$domaine['domaine_formation']][$entite['entite']];
+                      }
+                      else
+                          echo '';
+                    ?>
+            </td> 
+            <?php endforeach;   ?>
+            <!-- sous total par domaine -->
+            <td align="center"  class="bck-color"> 
+                <?php if(array_key_exists($domaine['domaine_formation'], $this->budgetAnnuelExecuteParDomaine)) 
+                        echo number_format(array_sum($this->budgetAnnuelExecuteParDomaine[$domaine['domaine_formation']])); ?>
+            </td>
+             <?php endforeach; ?>
+            <!-- total realises par entites -->
+           <?php 
+                $totalRealise = 0;
+                foreach($this->entites as $entite): 
+           ?>
+                <td align="center"> 
+                    <?php echo number_format($totalCoutParEntite[$entite['entite']]); $totalRealise+= $totalCoutParEntite[$entite['entite']];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL REALISE -->
+           <td align="center" class="bck-color"><?php echo number_format($totalRealise);?> </td>
+        </tr> 
+        <!-- ********** FIN BUDGET ANNUEL EXECUTE ************ -->
+        
+        
+        
+        <!-- Taux de réalisation du budget  -->
+        <tr>
+            <td colspan='2'>Taux réalisation budget</td>
+            <?php $tauxRealisationParDomaine = array();
+                  foreach($this->domaines as $domaine) : 
+                  $tauxRealisationParDomaine[$domaine['domaine_formation']] = 0;   
+                  foreach($this->entites as $entite):
+              ?>
+            <td align="center">
+                <?php if(array_key_exists($domaine['domaine_formation'], $this->budgetAnnuelExecuteParDomaine) and
+                         array_key_exists($entite['entite'], $this->budgetAnnuelExecuteParDomaine[$domaine['domaine_formation']]) and
+                         array_key_exists($domaine['id'], $this->budgetDomaine) and
+                         array_key_exists($entite['id'], $this->budgetDomaine[$domaine['id']])
+                        ) 
+                      { 
+                        $val= $this->budgetAnnuelExecuteParDomaine[$domaine['domaine_formation']][$entite['entite']]/$this->budgetDomaine[$domaine['id']][$entite['id']];
+                        echo number_format($val*100,1).'%';
+                        $tauxRealisationParDomaine[$domaine['domaine_formation']] += $val;
+                        //$tauxRealisationBudgetParEntite[$entite['entite']] += $val;
+                      }
+                      else
+                          echo '0%';
+                    ?>
+            </td> 
+            <?php endforeach;   ?>
+            <!-- sous domaine -->
+            <td align="center"><?php echo number_format(($tauxRealisationParDomaine[$domaine['domaine_formation']]/count($tauxRealisationParDomaine[$domaine['domaine_formation']]))*100,1);?>%</td>
+            <?php  endforeach; ?>
+           <?php 
+               
+                foreach($this->entites as $entite): 
+           ?>
+                <td align="center"> 
+                    <?php echo number_format($totalCoutParEntite[$entite['entite']]/$totalDomaineByEntite[$entite['id']]*100,1).'%'; 
+                          //$totalRealise+= $totalCoutParEntite[$entite['entite']];
+                    ?>
+                </td> 
+           <?php endforeach;?>
+            <td align="center">
+                <?php echo number_format(($totalRealise/array_sum($totalDomaineByEntite))*100,2).'%';?>
+            </td>
+          
+        </tr>
+         
+    </table>
+ 
+    </div>
+    
+    
+    
+  

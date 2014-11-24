@@ -1,0 +1,25 @@
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h3 class="tit">Enregistrer coût direct</h3>
+   
+    <div class="box-content">
+        <?php
+        $this->form->setAction($this->url(array("controller" => "formation-cout-direct", "action" => "save-form")));
+        echo $this->form;
+        ?>
+        <div class="cleaner"></div>
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="actionBar">
+        
+        <a href="<?php echo $this->url(array('controller' => 'formation-cout-direct', 'action' => 'index','id_formation' => $this->formation['id']), null, true); ?>" class="list">
+           liste des couts direct
+        </a>        
+    </div>
+    
+</div> <!-- /content -->
+
+
+

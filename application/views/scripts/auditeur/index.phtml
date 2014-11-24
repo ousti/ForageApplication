@@ -1,0 +1,208 @@
+<?php
+    $this->jQuery()->addOnLoad("
+      $('.tabs > ul').tabs();
+    ");
+    
+    //$this->headScript()->appendFile($this->baseUrl().'/js/ui.core.js');
+    $this->headScript()->appendFile($this->baseUrl().'/js/ui.tabs.js');
+    
+    
+    
+    /*** Suppression d'un participant *************/
+    $message  = 'Etes vous sur de vouloir supprimer ce participant';
+    echo $this->dialogContainer('dialog', $message, array(
+                                    'bgiframe'         => true,
+                                    'autoOpen'         => false,
+                                    'draggable'     => true,
+                                    'modal'         => true,
+                                    'resizable'     => false,
+                                    'title'         => 'Suppression Auditeur Formation',
+                                    'closeOnEscape' => true
+
+    ));
+    $url = $this->url(array(
+                            'module'     => 'default',
+                            'controller' => 'auditeur',
+                            'action'     => 'delete',
+                            'id_formation'=>$this->formation['id']
+                       ));
+    
+    $this->jQuery()->addOnLoad("
+      $('.delete-auditeur-link').click(function(){ 
+         var currentId = $(this).attr('id');
+         $('#dialog').dialog('option', 'buttons', [ 
+                     { text: 'Supprimer', click: function() {
+                        document.location = '$url/id_auditeur/'+currentId;
+                      } 
+                     }, 
+                     { text: 'Annuler', click: function() { $(this).dialog( 'close' ); } } 
+                     ] );
+         $('#dialog').dialog('open');
+          
+         
+       });
+   ");
+   /**** Absence d'un participant *********/
+    $message  = 'Etes vous sur de vouloir que ce participant a été absent ?';
+    echo $this->dialogContainer('dialog-missing', $message, array(
+                                    'bgiframe'         => true,
+                                    'autoOpen'         => false,
+                                    'draggable'     => true,
+                                    'modal'         => true,
+                                    'resizable'     => false,
+                                    'title'         => 'Absence Auditeur Formation',
+                                    'closeOnEscape' => true
+
+    ));
+    $url = $this->url(array(
+                            'module'     => 'default',
+                            'controller' => 'auditeur',
+                            'action'     => 'missing',
+                            'id_formation'=>$this->formation['id']
+                       ));
+    
+    $this->jQuery()->addOnLoad("
+      $('.missing-auditeur-link').click(function(){ 
+         var currentId = $(this).attr('id');
+         $('#dialog-missing').dialog('option', 'buttons', [ 
+                     { text: 'Valider', click: function() {
+                        document.location = '$url/id_auditeur/'+currentId;
+                      } 
+                     }, 
+                     { text: 'Annuler', click: function() { $(this).dialog( 'close' ); } } 
+                     ] );
+         $('#dialog-missing').dialog('open');
+          
+         
+       });
+   ");
+   
+?>
+
+<!-- Aside (Left Column) -->
+<div id="aside" class="box">
+
+    <?php echo $this->partial('common/formation_submenu.phtml',
+                               array('id_formation' => $this->formation['id'],
+                                     'type_formateur' => $this->formation['type_formateur']
+                                     )
+                             );
+?>
+
+</div> <!-- /aside -->
+
+<hr class="noscreen" />
+
+
+
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h4 class="tit">  Auditeurs &rsaquo; <?php echo $this->formation['intitule']; ?> </h4>
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+
+     <!-- ACTION BAR -->
+    <div class="actionBar topBar">
+        <form method="post">
+            <select name="filterByEntite" onchange="this.form.submit()">
+                <option value="-1"> filtrer par entité</option>   
+                <?php foreach(Misc_Utils::getEntite() as $key=>$value) : ?>
+                <option value="<?php echo $key;?>"><?php echo $value;?></option>   
+                <?php endforeach;?>
+            </select>
+            <select name="filterByStatusPresence" onchange="this.form.submit()">
+                <option value="-1"> filtrer par status</option>   
+                <?php foreach(Misc_Utils::getStatutPresence() as $key=>$value) : ?>
+                <option value="<?php echo $key;?>"><?php echo $value;?></option>   
+                <?php endforeach;?>
+            </select>
+            
+        </form>
+   </div>
+
+
+    <div class="tabs box">
+        <ul>
+            <?php $i=1; foreach($this->sessions as $session) : ?>    
+            <li><a href="#tab_<?php echo $session['id'];?>">
+                    <span>Session <?php echo $i++;?> [<?php echo Misc_Utils::formatDateToFr($session['date_debut']); ?>] </span></a></li>
+            <?php endforeach;?>
+        </ul>
+    </div> <!-- /tabs  -->
+
+
+ <?php $j=1; 
+       foreach($this->sessions as $session) { 
+ ?>    
+ <div id="tab_<?php echo $session['id'];?>" class="col50s">
+    <h5> <?php $indice = $session['id'];
+               if(array_key_exists($indice,$this->auditeurs)) : 
+               echo count($this->auditeurs[$indice]);?> auditeurs enregistrés >  
+               <?php echo $session['auditeur_prevu'];?> prévus
+    </h5>
+    <p>
+    <!-- Liste des formations  -->
+    <table class="list">
+        <tr>
+            <th>Session <?php echo $j; ?> [<?php echo Misc_Utils::formatDateToFr($session['date_debut']); ?>] &rsaquo; auditeurs</th>
+            <th>Matricule</th>
+            <th>Entité</th>
+            <th>Direction</th>
+            <th>Présent</th>
+            <th>&nbsp;</th>
+        <?php 
+              foreach($this->auditeurs[$indice] as $a) { ?>
+        <tr>
+            <td><?php echo $a['nom'].' '.$a['prenoms']; ?></td>
+            <td align="center"><?php echo $a['matricule']; ?></td>
+            <td align="center"><?php echo $a['entite']; ?></td>
+            <td align="center"><?php echo $a['direction']; ?></td>
+            <td align="center">
+                 <?php
+                    if($a['statut']) echo '<font color="black">oui</font>';
+                    else echo '<strong><font color="red">non</font></strong>';
+                  ?> 
+            </td> 
+            <td class="actions"> 
+               <a class="delete delete-auditeur-link" href="#" id="<?php echo $a['id'];?>">
+                    supprimer
+               </a>
+                <?php if($a['statut']) { ?>
+               <a class="missing-auditeur-link" href="#" id="<?php echo $a['id'];?>">
+                   absent
+               </a>
+                <?php } ?>
+            </td>
+        </tr>
+        <?php } ?>
+   </table>
+ 
+   <?php endif; ?>
+   
+    <!-- ACTION BAR -->
+   <?php  $j++; if(!array_key_exists($indice,$this->auditeurs) or $session['auditeur_prevu']>count($this->auditeurs[$indice])) { ?>
+    <div class="actionBar">
+        <a href="<?php echo $this->url(array('controller' => 'auditeur', 'action' => 'add', 'id_formation' =>$this->formation['id'],'id_session'=>$session['id']), null, true); ?>" class="add">
+            ajouter auditeur <?php //echo $j;?>
+        </a>
+    </div>
+   <?php } else echo '<br><div class="msg info">Vous ne pouvez plus ajouter de participants à cette session de formation</div>'; ?> 
+    
+   </p> 
+   
+ </div>
+    
+
+ <?php } ?>
+    
+
+    
+    
+</div> <!-- /content -->
+

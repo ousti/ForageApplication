@@ -1,0 +1,12 @@
+
+<?php $this->placeholder('menu')->captureStart() ?>
+ <div id="menu" class="box">
+    <ul class="box">
+            <li id="menu-active"><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true); ?>"><span>gestion des formations</span></a></li> <!-- Active -->
+            <li><a href="<?php echo $this->url(array('controller' => 'organisme', 'action' => 'index'), null, true); ?>"><span>organismes de formation</span></a></li>
+            <li><a href="#"><span>participants</span></a></li>
+            <li><a href="#"><span>lieux de formation</span></a></li>
+            <li><a href="#"><span>direction</span></a></li>
+    </ul>
+</div> <!-- /menu -->
+<?php $this->placeholder('menu')->captureEnd() ?>

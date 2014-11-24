@@ -1,0 +1,93 @@
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- Entete Tableau -->
+    <h3 class="tit">Tableau de Bord des actions de formation OCIT &rsaquo;
+                    <span class=""><?php echo date('m.Y'); ?></span>
+    </h3>
+    
+    <?php //var_dump($this->resultat); ?>
+    <h4>Etat des Actions de Formations Réalisées</h4>
+   
+    <!-- Entete du Tableau  -->
+    <table class="list">
+        <tr>
+            <td colspan='2' style='border:none'></td>
+            <td colspan='3' class='collapse'>Support</td>
+            <td colspan='3' class='collapse'>Client</td>
+            <td colspan='3' class='collapse'>Technique</td>
+            <td colspan='4' class='collapse total'>TOTAL GENERAL OCIT</td>
+        </tr>
+        <tr>
+            <td colspan='2' style='border-top:none'> </td>
+            <!-- COL Support -->
+            <td class='collapse-child'>CIT</th>
+            <td class='collapse-child'>CI2M</td>
+            <td class='collapse-child'>OCI</td>
+            <!-- COL Client -->
+            <td class='collapse-child'>CIT</td>
+            <td class='collapse-child'>CI2M</td>
+            <td class='collapse-child'>OCI</td>
+            <!-- COL Technique -->
+            <td class='collapse-child'>CIT</td>
+            <td class='collapse-child'>CI2M</td>
+            <td class='collapse-child'>OCI</td>
+            <!-- TOTAL GENERAL -->
+            <td class='collapse-child total-child'>CIT</td>
+            <td class='collapse-child total-child'>CI2M</td>
+            <td class='collapse-child total-child'>OCI</td>
+            <td class='collapse-child total'>TOTAL</td>
+        </tr>
+        <!-- LIGNE ACTION DE FORMATION -->
+        <tr><td rowspan='4'>Actions  de formation</td> </tr>
+        <tr><td>Prévues</td> 
+            <td></td> <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+        </tr>
+        <tr><td>Réalisées</td> 
+            <td></td> <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+        </tr>
+        <tr><td>Effort de formation</td> 
+            <td></td> <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+        </tr>
+       <!-- LIGNE HEURE DE FORMATION -->
+        <tr><td rowspan='3'>Nombre d'heures de formation</td> </tr>
+        <tr><td>H_FOR_PM</td> 
+            <td></td> <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+        </tr>
+        <tr><td>H_FOR_YTD</td> 
+            <td></td> <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+            <td></td> <td></td> <td></td> 
+        </tr>
+
+    </table>
+    <br><br>
+
+    <!-- 
+       ETAT DES ACTIONS DE FORMATIONS REALISEES :: faire ajaxLink
+    -->
+    <h4>Etat Financier des Actions de Formations Réalisées</h4>
+    <div id='etat-financier'>
+        
+    </div>
+    
+    
+    
+    
+    
+    
+</div> <!-- /content -->

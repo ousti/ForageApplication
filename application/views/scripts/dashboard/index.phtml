@@ -1,0 +1,64 @@
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+     <!-- Entete Tableau -->
+    <h3 class="tit">Tableau de Bord des actions de formation OCIT &rsaquo;
+                    <span class=""><?php echo $this->param['date']; ?></span>
+    </h3>
+     
+    
+    <div id="submenu" class="horizontal">                  
+        <div class="topBar"><?php echo $this->filterDashboardForm; ?> </div>
+    </div>
+   
+    <h5> 
+        <img src="<?php echo $this->baseUrl().'../images/actions/export-xls.png'; ?>" width="25" height="25" id="exportLink" alt="exporter sous excel" align="absmiddle" />
+    </h5>
+    
+    
+     <!-- ACTION DE FORMATION -->
+     <?php echo $this->partial('dashboard/_action-formation.phtml',
+                               array('entites' => $this->entites,'domaines'=>$this->domaines,
+                                    'resultat'=>$this->resultat,'heuresFormation'=>$this->heuresFormation,
+                                    'heuresFormationMoisEnCours'=>$this->heuresFormationMoisEnCours)
+                              );
+     ?>
+     
+     <!-- ETAT FINANCIER -->
+      <?php echo $this->partial('dashboard/_etat-financier.phtml',
+                               array('entites' => $this->entites,'domaines'=>$this->domaines,
+                                     'resultat'=>$this->resultat,'budgetDomaine'=>$this->budgetDomaine,
+                                     'budgetAnnuelExecuteParDomaine'=>$this->budgetAnnuelExecuteParDomaine,
+                                     'budgetDomaineMoisEnCours'=>$this->budgetDomaineMoisEnCours
+                                    )
+                               );
+     ?>
+     
+     <!-- ETAT DES PARTICIPANTS AUX ACTIONS DE FORMATION REALISEE -->
+     <?php echo $this->partial('dashboard/_etat-participants.phtml',
+                               array('entites' => $this->entites,'domaines'=>$this->domaines,
+                                     'etatParticipant'=> $this->etatParticipant,
+                                     'participantPresent'=> $this->participantPresent,
+                                     'actifYtd'=> $this->actifYtd
+
+                                    )
+                               );
+     ?>
+    
+  
+     <!-- REPARTITION PARTICIPANTS PAR CATEGORIE SOCIO-PROFESSIONNELLE AUX ACTIONS DE FORMATION REALISEE -->
+     <?php echo $this->partial('dashboard/_repartition-participants-categorie.phtml',
+                               array('entites' => $this->entites,'domaines'=>$this->domaines,
+                                     'categories'=> $this->categories, 'rp'=>$this->rp,
+                                     'repartitionParticipantCategorie'=>$this->repartitionParticipantCategorie
+                                     )
+                               );
+     ?>
+    
+  
+    
+    
+    
+</div> <!-- /content -->
+

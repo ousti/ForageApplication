@@ -1,0 +1,109 @@
+<!-- Aside (Left Column) -->
+<?php /*
+<div id="aside" class="box">
+    <!--
+    <div class="padding box">                  
+        <!-- Create a new project -->
+        <p id="btn-create" class="box">
+            <a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'add'), null, true); ?>"><span>enregistrer formation</span></a>
+        </p>
+    </div> <!-- /padding -->
+    -->
+</div> <!-- /aside -->
+*/
+?>
+<hr class="noscreen" />
+
+<div id="submenu" class="horizontal">                  
+    <p class="btn-link">
+        <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true); ?>" class="list">
+            <span>Actions de formation</span>
+        </a>
+    </p>
+    <p class="btn-link">
+        <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'done'), null, true); ?>" class="list">
+            <span>Formations réalisées</span>
+        </a>
+    </p>
+    <p class="btn-link">
+        <a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'add'), null, true); ?>" class="add">
+            <span>nouvelle formation</span>
+        </a>
+    </p>
+    <p class="btn-link"">
+       <a href="" class="export"><span>bons de commande</span></a>
+    </p>
+</div>
+
+<br/> <br/>
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">Calendriers actions de formation - <?php echo date('Y'); ?></h3>
+   
+    <!-- Liste des formations  -->
+    <table class="list">
+        <tr>
+            <th>Direction</th>
+            <th>Intitul&eacute;</th>
+            <th>Période</th>
+            <th>Durée</th>
+            <th>NbH</th>
+            <th>#Audit prévu</th>
+            <th>Organisme</th>
+            <th>Type</th>
+            <th>Lieu</th>
+            <th>Cout</th>
+        </tr>
+        <?php for($mois=0; $mois<=count(Misc_Utils::getMoisAnnee()); $mois++) : 
+              if(array_key_exists($mois, $this->calendrierActionFormation)) : 
+            ?>
+        <tr> <td></td>
+             <td class="groupBy"><?php echo ($mois==0 ? 'non défini' : Misc_Utils::getMoisAnnee($mois)); ?></td>
+            <td colspan="2"></td>
+       </tr>
+            <?php 
+                  $formations = $this->calendrierActionFormation[$mois];
+                  foreach($formations as $formation) { ?>
+            <tr>
+                <td><?php echo $formation['direction']; ?></td>
+                <td> <a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'detail', 'id'=>$formation['id']), null, true); ?>">
+                        <?php echo $formation['intitule']; ?>
+                     </a>
+                </td>
+                <td align="center">
+                     <?php if($mois<>0) {
+                              $date = explode("-",$formation['date_debut']);
+                              echo $date[2].'/'.$date[1];
+                           } else echo '-';
+                    ?> -
+                    <?php if($mois<>0) {
+                              $date = explode("-",$formation['date_fin']);
+                              echo $date[2].'/'.$date[1];
+                           } else echo '-';
+                 ?></td>
+                <td align="center"> <?php echo $formation['nombre_jour'];?></td>
+                <td align="center"> <?php echo $formation['nombre_heure_jour'];?></td>
+                <td align="center"> <?php //echo $formation['nbAuditeur'];?></td>
+                <td align="center"> <?php //if($formation['organisme']<>'') echo $formation['organisme']; else echo 'FORMATEUR INTERNE'?></td>
+                <td align="center"> <?php echo $formation['type_formation'];?></td>
+                <td> <?php echo $formation['localisation'];?></td>
+                <td align="center"> <?php //echo $formation['cout_direct'];?></td>
+                <!-- ACTION 
+                <td class="actions"> 
+                    <a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'detail', 'id'=>$formation['id']), null, true); ?>" class="detail">
+                        détail
+                    </a>
+                    <a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'edit', 'id'=>$formation['id']), null, true); ?>" class="edit">
+                        modifier
+                    </a>
+
+              </td>-->
+            </tr>
+            <?php } ?>
+        <?php endif; endfor; ?>
+    </table>
+
+
+</div> <!-- /content -->

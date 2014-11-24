@@ -1,0 +1,80 @@
+
+<!-- Aside (Left Column) -->
+<div id="aside" class="box">
+
+    <?php echo $this->partial('common/formation_submenu.phtml',
+                               array('id_formation' => $this->formation->getId())
+                             );
+?>
+
+</div> <!-- /aside -->
+
+<hr class="noscreen" />
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h4 class="tit"><?php echo $this->formation->getIntitule(); ?> </h4>
+  
+     <table id="detail">
+            <tr>
+                <td class="label">Pole : </td>
+                <td><?php 
+                          $pole = $this->formation->getPole();
+                          echo $pole->getPole();
+                    ?></td>
+            </tr>
+            <tr>
+                <td class="label">Direction : </td>
+                <td>
+                    <?php 
+                          $direction = $this->formation->getDirections();
+                          echo $direction->getDirection();
+                    ?>
+                </td>
+            </tr>
+              <tr>
+                <td class="label">Objectifs : </td>
+                <td><?php echo $this->formation->getObjectif(); ?></td>
+            </tr>
+            <tr>
+                <td class="label">Type formation : </td>
+                <td><?php 
+                          $type = $this->formation->getType();
+                          echo $type->getType();
+                    ?></td>
+            </tr>
+             <tr>
+                <td class="label">Nature formation : </td>
+                <td><?php 
+                          $nature = $this->formation->getNature();
+                          echo $nature->getNature();
+                    ?></td>
+            </tr>
+            <!--
+             <tr>
+                <td class="label">Organisme : </td>
+                <td><?php 
+                          //$organisme = $this->formation->getOrganismes();
+                          //echo $organisme->getOrganisme();
+                    ?></td>
+            </tr>
+            -->
+    </table>
+
+    
+     <!-- ACTION BAR -->
+    <div class="actionBar">
+        
+        <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true); ?>" class="list">
+            liste
+        </a>
+        <a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'edit'), null, true); ?>" class="edit">
+            modifier
+        </a>
+        
+    </div>
+     
+     
+</div> <!-- /content -->

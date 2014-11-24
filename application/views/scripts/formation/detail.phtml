@@ -1,0 +1,247 @@
+<?php 
+    $this->jQuery()->enable();
+    $message  = 'Etes vous sur de vouloir supprimer la formation <p>'.$this->formation->getIntitule().'</p>';
+    echo $this->dialogContainer('dialog', $message, array(
+                                    'bgiframe'         => true,
+                                    'autoOpen'         => false,
+                                    'draggable'     => true,
+                                    'modal'         => true,
+                                    'resizable'     => false,
+                                    'title'         => 'Suppression Formation',
+                                    'closeOnEscape' => true,
+                                    'buttons'   => array(
+                                            'Supprimer' =>  new Zend_Json_Expr('function() {
+                                                document.location=\''.$this->url(array(
+                                                    'module'     => 'default',
+                                                    'controller' => 'formation',
+                                                    'action'     => 'delete',
+                                                    'id'=>$this->formation->getId()
+                                                ),"", true) .'\' 
+                                            }'),
+                                            'Annuler' => new Zend_Json_Expr('function() {
+                                                $(this).dialog(\'close\');
+                                            }')
+    )));
+    $message  = 'Etes vous sur de vouloir cloturer la formation <p>'.$this->formation->getIntitule().'</p>';
+    echo $this->dialogContainer('dialog-close-formation', $message, array(
+                                    'bgiframe'         => true,
+                                    'autoOpen'         => false,
+                                    'draggable'     => true,
+                                    'modal'         => true,
+                                    'resizable'     => false,
+                                    'title'         => 'Cloture de Formation',
+                                    'closeOnEscape' => true,
+                                    'buttons'   => array(
+                                            'Clore' =>  new Zend_Json_Expr('function() {
+                                                document.location=\''.$this->url(array(
+                                                    'module'     => 'default',
+                                                    'controller' => 'formation',
+                                                    'action'     => 'close',
+                                                    'id'=>$this->formation->getId()
+                                                ),"", true) .'\' 
+                                            }'),
+                                            'Annuler' => new Zend_Json_Expr('function() {
+                                                $(this).dialog(\'close\');
+                                            }')
+    )));
+    
+    $message  = 'Etes vous sur de vouloir annuler la cloture de la formation <p>'.$this->formation->getIntitule().'</p>';
+    echo $this->dialogContainer('dialog-rollback-close-formation', $message, array(
+                                    'bgiframe'         => true,
+                                    'autoOpen'         => false,
+                                    'draggable'     => true,
+                                    'modal'         => true,
+                                    'resizable'     => false,
+                                    'title'         => 'Annulation de cloture de Formation',
+                                    'closeOnEscape' => true,
+                                    'buttons'   => array(
+                                            'Clore' =>  new Zend_Json_Expr('function() {
+                                                document.location=\''.$this->url(array(
+                                                    'module'     => 'default',
+                                                    'controller' => 'formation',
+                                                    'action'     => 'rollbackclose',
+                                                    'id'=>$this->formation->getId()
+                                                ),"", true) .'\' 
+                                            }'),
+                                            'Annuler' => new Zend_Json_Expr('function() {
+                                                $(this).dialog(\'close\');
+                                            }')
+    )));
+    
+    $this->jQuery()->addOnLoad("
+      $('#delete-formation-btn').click(function(){                    
+         $('#dialog').dialog('open');
+       });
+        $('#close-formation-btn').click(function(){                    
+         $('#dialog-close-formation').dialog('open');
+       });
+        $('#rollback-close-formation-btn').click(function(){                    
+         $('#dialog-rollback-close-formation').dialog('open');
+       });
+   ");
+ 
+            ?>
+<!-- Aside (Left Column) -->
+<div id="aside" class="box">
+
+    <?php echo $this->partial('common/formation_submenu.phtml',
+                               array('id_formation' => $this->formation->getId(),
+                                     'type_formateur' => $this->formation->getType_formateur()
+            )
+                             );
+?>
+
+</div> <!-- /aside -->
+
+<hr class="noscreen" />
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h4 class="tit"><?php echo $this->formation->getIntitule(); ?> </h4>
+    
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+
+     <table id="detail">
+         <tr>
+             <!-- LEFT COL -->
+             <td width="60%" valign="top">
+                 <table style="border:none; margin-left: 40px">
+                     <tr>
+                        <td class="label">Direction : </td>
+                        <td>
+                            <?php 
+                                $direction = $this->formation->getDirection();
+                                echo $direction['direction'];
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Pole : </td>
+                        <td><?php 
+                                $pole = $this->formation->getPole($direction['id_pole']);
+                                echo $pole['pole'];
+                            ?></td>
+                    </tr>
+                   
+                    <tr>
+                        <td class="label">Type formation : </td>
+                        <td><?php 
+                                $type = $this->formation->getTypeFormation();
+                                echo $type['type_formation'];
+                            ?></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Nature formation : </td>
+                        <td><?php 
+                                $nature = $this->formation->getNatureFormation();
+                                echo $nature['nature_formation'];
+                            ?></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Domaine : </td>
+                        <td> 
+                           <?php 
+                             $domaine = $this->formation->getDomaineFormation(); 
+                             echo $domaine['domaine_formation'];
+                            ?>
+                        </td>
+                    </tr>
+                 </table>
+            </td>
+             
+             
+             <!-- RIGHT COL -->
+             <td width="50%" valign="top">
+                 <table style="border:none; margin-right:20px">
+                     <tr>
+                        <td class="label">Réalisé par : </td>
+                        <td> 
+                           <?php if($this->formation->getType_formateur()== 1) {
+                                  echo $this->formationExterne['organisme'];
+                                }
+                           else echo 'Formateur interne'
+                               ;?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Nombre de sessions : </td>
+                        <td> 
+                           <?php echo $this->formation->getNombreSession();?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Nombre de participants prévus : </td>
+                        <td> 
+                          <?php echo $this->formation->getTotalNombreAuditeurPrevu();?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">Cout total : </td>
+                        <td> 
+                           <?php echo number_format($this->formation->getCoutTotal());?> FCFA
+                        </td>
+                    </tr>
+                 </table>
+             </td>
+             <!-- End RIGHT COL -->
+         </tr>
+         
+         <!-- 
+         <tr>
+             <td colspan="2"> 
+                 <strong>Objectifs </strong> </br></br>
+                 <table>
+                  <tr> <th>objectif </th> <th> retenu pour evaluation</th> 
+                  <?php
+                    foreach($this->objectif as $objectif) :
+                        echo '<tr><td>'.$objectif->objectif.'</td><td align="center">'.($objectif->evaluation==1 ? "Oui" : "Non").'</td></tr>';
+                    endforeach;
+                  ?>
+                 </table>
+            </td>
+         </tr>
+         -->
+         
+      </table>    
+         
+         
+   
+     <!-- ACTION BAR -->
+    <div class="actionBar">
+        
+        <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true); ?>" class="list">
+            liste
+        </a>
+        <a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'edit', 'id'=>$this->formation->getId()), null, true); ?>" class="edit">
+            modifier
+        </a>
+        <a id="delete-formation-btn" href="#" class="delete">
+            supprimer
+        </a>
+        <?php if($this->formation->getStatut()==0) { ?>
+        <a  id="close-formation-btn" href="#" class="close">
+            clôturer
+        </a>
+        <?php } else { if($this->formation->getStatut()==1) ?>
+        <a  id="rollback-close-formation-btn" href="#" class="rollback">
+            annuler clôture
+        </a>        
+        <?php } ?>
+        
+    </div>
+     
+     
+</div> <!-- /content -->
+
+
+<!--
+
+           href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'delete', 'id'=>$this->formation->getId()), null, true); ?>" class="delete">
+
+-->

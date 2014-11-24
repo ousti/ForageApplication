@@ -1,0 +1,91 @@
+<?php
+    $this->jQuery()->addOnLoad("
+      $('.tabs > ul').tabs();
+    ");
+    
+    $this->headScript()->appendFile($this->baseUrl().'/js/ui.core.js');
+    $this->headScript()->appendFile($this->baseUrl().'/js/ui.tabs.js');
+
+    
+?>
+
+  <div id="submenu" class="horizontal">                  
+        <div class="topBar"><?php echo $this->filterPersonnelForm; ?> </div>
+  </div>
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">Personnel OCIT
+     <?php 
+        if(count($this->sortString)) :
+          echo '<span class="sortTitle">';
+          if(array_key_exists('salarie', $this->sortString)) echo ' &rsaquo; Salarié '.$this->sortString['salarie'];
+          if(array_key_exists('direction', $this->sortString)) echo ' &rsaquo; '.$this->sortString['direction'];
+          echo '</span>';
+       endif;
+        ?>
+    </h3>
+
+
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+   
+   
+    <div class="tabs box">
+        <ul>
+            <?php foreach(array_keys($this->personnels) as $entite) : ?>    
+            <li><a href="#tab_<?php echo $entite;?>"><span>Salarié <?php echo $entite;?></span></a></li>
+            <?php endforeach;?>
+        </ul>
+    </div> <!-- /tabs -->
+
+    
+ 
+ <?php foreach(array_keys($this->personnels) as $entite) : ?>    
+ <div id="tab_<?php echo $entite;?>" class="col50">
+     <h5> [ <?php echo count($this->personnels[$entite]);?> enregistrements ]</h5>
+    <p>
+    <table class="list">
+        <tr>
+            <th>Direction</th>
+            <th>Matricule</th>
+            <th>Salari&eacute;</th>
+            <th>Cat&eacute;gorie</th>
+            <th>Actions</th>
+        </tr>
+        <?php foreach($this->personnels[$entite] as $personnel) { ?>
+        <tr>
+            <td align="center"><?php echo $personnel['direction'];?></td>
+            <td align="center"><?php echo $personnel['matricule'];?></td>
+            <td><?php echo $personnel['nom'].' '.$personnel['prenoms']; ?></td>
+            <td align="center"><?php echo $personnel['categorie'];?></td>
+           <td class="actions"> 
+                 <a href="<?php echo $this->url(array('controller' => 'personnel', 'action' => 'detail', 'id'=>$personnel['id']), null, true); ?>" class="detail">
+                    détail
+                </a>
+               
+                <a href="<?php echo $this->url(array('controller' => 'personnel', 'action' => 'edit', 'id'=>$personnel['id']), null, true); ?>" class="edit">
+                    modifier
+                </a>
+               <!--
+                <a href="" class="delete">
+                    supprimer
+                </a>
+                -->
+            </td>
+        </tr>
+        <?php } ?>
+    </table>
+     </p>
+ </div>
+<?php endforeach;?>
+  
+
+    
+    
+</div> <!-- /content -->

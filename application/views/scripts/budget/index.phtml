@@ -1,0 +1,54 @@
+
+<hr class="noscreen" />
+<!-- 
+<div id="submenu" class="horizontal">                  
+    <p class="btn-link">
+        <a href="<?php echo $this->url(array('controller' => 'direction', 'action' => 'add'), null, true); ?>" class="add">
+            <span>enregistrer budget</span>
+        </a>
+    </p> 
+</div>
+-->
+
+<br/> <br/>
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">Budget OCIT &rsaquo; <?php echo $this->exerciceYear;?></h3>
+   
+    <!-- Liste des directions  -->
+    <table class="list">
+        <tr>
+            <th>Entité</th>
+            <th align="center">Budget total annuel alloué</th>
+            <?php foreach($this->domaines as $d) { ?>
+                <th><?php echo $d['domaine_formation'];?></th>
+            <?php } ?>
+        </tr>
+        <?php foreach($this->budgets as $budget) { ?>
+        <tr>
+            <td><?php echo $budget['entite'];?></td>
+            <td align="center"><?php echo number_format($budget['montant']);?></td>
+            <?php $id = $budget['id'];
+                 foreach($this->budgetDomaine[$id] as $o) { ?>
+            <td align="center"><?php echo number_format($o['allocationDomaine']);?></td>
+            <?php } ?>
+            <!-- 
+            <td class="actions"> 
+                <a href="<?php echo $this->url(array('controller' => 'budget', 'action' => 'edit', 'id'=>$budget['id']), null, true); ?>" class="edit">
+                    modifier
+                </a>
+            </td>
+           -->
+        </tr>
+        <?php } ?>
+        <tr>
+            <td align="right">Budget Total</td>
+            <td align="center" class="bck-color"><?php echo number_format($budget['montant_budget']);?></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+</div> <!-- /content -->

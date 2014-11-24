@@ -1,0 +1,415 @@
+/* WRITE YOUR CSS CODE HERE */
+
+/* REDEFINE 2col.CSS */
+#aside {float:left; width:215px; margin-right:0;}
+#content {margin-left:10px; overflow:visible; margin-top: 30px}
+html>body #aside {margin-right:0px;}
+html>body #content {margin-left:0; overflow:hidden;}
+
+#tray {
+     background-image: url("../images/head.png");
+     background-position: 0 0;
+     background-repeat: no-repeat;
+     height: 30px;
+     background-color: #FF6500
+}
+
+/**** TABLE ****/
+td.groupBy {
+    text-align: center;
+    background-color: #333;
+    color: #FFF;
+    font-size: 10px;
+}
+                    
+div.vertical a {
+    background-image: url('../images/arrow.png');
+    background-position: 8px 7px;
+    background-repeat: no-repeat;
+}                    
+                    
+.clear {
+    clear: both;
+}
+
+div.formrow {
+   margin-bottom: 15px; 
+}
+
+label {
+    color:#000;
+    display: block;
+    float: left;
+    margin-right:60px;
+}
+
+ input[type="text"] { 
+     width:400px;
+ }
+ 
+textarea {
+    width:400px;
+    height: 100px;
+    border: 1px solid #CCC
+}
+
+
+/**** FORM ****/
+form dt {
+   margin-bottom: 15px;
+}
+
+form dd input, form dd textarea {
+    padding:3px;
+    border:1px solid #CCC;
+    border-radius:5px;
+    width:400px;
+    box-shadow:1px 1px 2px #C0C0C0 inset;
+ }
+ 
+form dd select {
+    padding:3px;
+    border:1px solid #CCC;
+    border-radius:5px;
+    width:150px;
+    box-shadow:1px 1px 2px #C0C0C0 inset;
+ }
+ 
+ 
+form dt label {
+    width:250px;
+    font-weight: normal;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+form dd input[type=submit], form dd input[type=reset] {
+  width:200px;
+  margin-left:310px;
+  box-shadow:1px 1px 1px #CCC;
+  cursor:pointer;
+  background-color: #000;
+  color:#FFF;
+  font-size: 90%;
+}
+ 
+form dd#genre-element { /* button radio genre */
+    
+}
+ 
+ form dd#genre-element > label { /* button radio genre */
+    float:left;
+    width:900px;
+    margin-left: 120px;
+    
+ }
+form dd#genre-element > input { /* button radio genre */
+   
+ }
+
+/*********/
+
+
+div#submenu {
+    width:100%;
+    margin-bottom:10px;
+    margin-left: 20px;
+   /*padding-left:20px;
+    text-align: left;
+    clear: both;*/
+}
+
+div#submenu .btn-link  {
+    position: relative;
+    top: -5px;
+}
+
+div#submenu .btn-link a {
+    width: 130px;
+    padding: 5px;
+    display: block;
+    float: left;
+    margin-right: 10px;
+    text-decoration: none;
+    color: #FF6501;
+    font-weight: bold;
+    font-size:0.8em;
+    text-align: left;
+    padding-left: 25px;
+    color: #333;
+    background-color: #FFF;
+    border: 1px solid #CCC
+}
+
+div#submenu .btn-link a:hover, div#submenu .btn-link a.current  {
+    /*background-color: #F5F5F5;*/
+    background-color: #FF6501;
+    color: #FFF
+}
+
+
+#btn-create a {
+    float:left; overflow:hidden;
+    color:#FF6501; font-size:0.85em; font-weight: bold;
+    /*background:url("../design/btn-create-left.gif") 0 0 no-repeat;*/ text-decoration:none; 
+    cursor:pointer;
+}
+#btn-create a span {
+    float:left; display:block; width:163px; padding:8px 0 10px 10px; 
+    /*background:url("../design/btn-create-right.gif") -2px 0 no-repeat;*/
+}
+#btn-create a:hover {
+    background-position:0 -37px;
+}
+
+table#detail {
+  padding: 10px;
+  border: none;
+}
+
+table#detail td {
+  padding: 5px;
+  border: none;
+}
+
+table#detail td.label {
+    font-weight: bold;
+    font-size: 103%;
+    text-align: right;
+}
+
+/*
+    TABLE LIST
+*/
+
+table.list {
+   width:100%;
+}
+table.list th {
+   font-size:85%;
+}
+
+table.list td {
+   font-size: 80%;
+}
+
+table.list a {
+   text-decoration: none;
+   color: #333;
+}
+
+table.list td.actions {
+    
+}
+
+table.list td.actions a {
+    width: 80px;
+    display: block;
+    float: left;
+    margin: 0 -5px 0 5px;
+    padding: 0 0 0 5px;
+    text-decoration: none;
+    color: #666;
+    text-align: center;
+    font-size: 0.85em;
+}
+
+table.list td.actions a:hover {
+    color:#333;
+}
+
+table.list td.actions a.edit, a.edit {
+    background-image: url('../images/actions/edit.png');
+    background-position: 2px 0px;
+    background-repeat: no-repeat;
+}
+
+table.list td.actions a.delete {
+    background-image: url('../images/actions/drop.png');
+    background-position: -1px 0px;
+    background-repeat: no-repeat;
+}
+
+table.list td.actions a.detail {
+    background-image: url('../images/actions/detail.png');
+    background-position: 8px 0px;
+    background-repeat: no-repeat;
+}
+
+table.list td.actions a.missing-auditeur-link {
+    background-image: url('../images/arrow.png');
+    background-position: 15px 0px;
+    background-repeat: no-repeat;
+}
+
+table.list tr.sub-result td {
+    background-color: #CCC;
+    color:#303030;
+    font-weight: bold;
+    font-size: 100%
+}
+
+table.list tr.result td {
+    background-color: #F00;
+    color:#FFF;
+    font-weight: bold;
+}
+
+table.list td.collapse {
+    text-align: center;
+    background-color: #000;
+    color: #F00;
+    border:2px solid #303030;
+}
+
+table.list td.total {
+    background-color: #FF6501;
+    color: #FFF;
+}
+
+table.list td.collapse-child {
+    text-align: center;
+    color: #FFF;
+    background-color:#666 ;
+    border:2px solid #FFF;
+}
+table.list td.total-child {
+    background-color: #333;
+    color: #FFF;
+}
+
+table.list tr#bck-color td, table.list td.bck-color {
+    background-color: #FF6501;
+    color:#FFF
+}
+
+/*
+   BOTTOM ACTION BAR
+*/
+
+div.actionBar {
+    margin: 20px 0 0 0;
+    border-top:1px dotted #CCC;
+}
+
+div.actionBar a {
+    width:120px;
+    float: left;
+    margin: 5px 15px 0 0;
+    padding: 5px;
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    font-size:0.85em;
+    text-align: center;
+    color: #333;
+    background-color: #f8f5bc
+}
+div.actionBar a:hover {
+    background-color: #CCC;
+}
+
+div.actionBar a.add, a.add {
+    background-image: url('../images/actions/add.png');
+    background-position: 4px 6px;
+    background-repeat: no-repeat;
+}
+
+div.actionBar a.edit, a.edit {
+    background-image: url('../images/actions/edit.png');
+    background-position: 20px 6px;
+    background-repeat: no-repeat;
+}
+
+div.actionBar a.delete, a.delete {
+    background-image: url('../images/actions/drop.png');
+    background-position: 5px 5px;
+    background-repeat: no-repeat;
+}
+
+div.actionBar a.close, a.close {
+    background-image: url('../images/actions/close.png');
+    background-position: 5px 0px;
+    background-repeat: no-repeat;
+}
+
+/*** FILTER ****/
+div.topBar {
+    border:none;
+    margin-bottom:10px;
+    text-align: right;
+    padding-right: 50px;
+}
+
+div.topBar form {
+    display:inline; 
+    text-align: right;
+}
+
+div.topBar form select {
+   font-size: 90%;  
+}
+
+/*** REDEFINIG ELEMENT FOR FILTER ****/
+div.topBar > form dt, div.topBar > form dl, div.topBar > form dd {
+   float:left;
+}
+
+div.topBar > form dd input, div.topBar > form dd textarea {
+    padding:3px;
+    border:1px solid #CCC;
+    border-radius:5px;
+    box-shadow:1px 1px 2px #C0C0C0 inset;
+ }
+ 
+ div.topBar > form dd input.date{
+    width:50px;
+ }
+ 
+div.topBar > form dd select {
+    padding:3px;
+    border:1px solid #CCC;
+    border-radius:5px;
+    width:150px;
+    box-shadow:1px 1px 2px #C0C0C0 inset;
+ }
+ 
+div.topBar > form dt label {
+    font-weight: normal;
+    font-size: 11px;
+}
+
+div.topBar > form dd input[type=submit], div.topBar > form dd input[type=reset] {
+  width:auto;
+  cursor:pointer;
+  background-color: #000;
+  color:#FFF;
+  font-size: 90%;
+  padding: 5px
+}
+
+div.topBar > form dd input.submit-filter {
+  margin-left:20px;
+}
+ 
+
+#dialog-delete-auditeur {
+    display: none;
+}
+
+span.sortTitle {
+    color:#FF6500;
+}
+
+div#content h5 {
+    display: block;
+    color: #999;
+    font-size: 90%;
+    font-weight: normal;
+    text-align: right
+}
+
+a#exportLink {
+   /* float: right;
+    margin-left: 100px*/
+}

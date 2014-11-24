@@ -1,0 +1,172 @@
+<?php
+    echo $this->doctype();
+?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="fr-FR">
+    <head>
+        <title>GRH FORMATION</title>
+       <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+        <!-- CSS PAGE -->
+        <link rel="stylesheet" media="screen,projection" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/reset.css" /> <!-- RESET -->
+	<link rel="stylesheet" media="screen,projection" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/main.css" /> <!-- MAIN STYLE SHEET -->
+	<link rel="stylesheet" media="screen,projection" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/2col.css" title="2col" /> <!-- DEFAULT: 2 COLUMNS -->
+	<link rel="alternate stylesheet" media="screen,projection" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/1col.css" title="1col" /> <!-- ALTERNATE: 1 COLUMN -->
+	<!--[if lte IE 6]><link rel="stylesheet" media="screen,projection" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/main-ie6.css" /><![endif]--> <!-- MSIE6 -->
+	<link rel="stylesheet" media="screen,projection" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/style.css" /> <!-- GRAPHIC THEME -->
+	<link rel="stylesheet" media="screen,projection" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/mystyle.css" /> <!-- WRITE YOUR CSS CODE HERE -->
+        <!-- END CSS PAGE -->
+        
+        <!-- JS PAGE -->
+        <?php 
+        /* ENABLING JQUERY AND UI */
+        $this->jQuery()->enable();
+       // if($this->jQuery()->isEnabled()){
+            $this->jQuery()->setLocalPath($this->baseUrl().'/js/jquery-1.7.2.min.js')
+                ->setUiLocalPath($this->baseUrl().'/js/jquery-ui-1.8.23.custom.min.js')
+                ->addStyleSheet($this->baseUrl().'/css/smoothness/jquery-ui-1.8.23.custom.css')
+              ;
+                echo $this->jQuery();
+                
+       // }
+        echo $this->headScript();
+        ?>
+       
+       <link rel="stylesheet" media="screen,projection" type="text/css" href="<?php echo $this->baseUrl(); ?>/css/menu.css" /> <!-- WRITE YOUR CSS CODE HERE -->
+
+        <script type="text/javascript">
+            var timeout         = 500;
+            var closetimer      = 0;
+            var ddmenuitem      = 0;
+
+            function jsddm_open()
+            {	jsddm_canceltimer();
+                    jsddm_close();
+                    ddmenuitem = $(this).find('ul').eq(0).css('visibility', 'visible');}
+
+            function jsddm_close()
+            {	if(ddmenuitem) ddmenuitem.css('visibility', 'hidden');}
+
+            function jsddm_timer()
+            {	closetimer = window.setTimeout(jsddm_close, timeout);}
+
+            function jsddm_canceltimer()
+            {	if(closetimer)
+                    {	window.clearTimeout(closetimer);
+                            closetimer = null;}}
+
+            $(document).ready(function()
+            {	$('#jsddm > li').bind('mouseover', jsddm_open);
+                    $('#jsddm > li').bind('mouseout',  jsddm_timer);});
+
+            document.onclick = jsddm_close;
+            
+      </script>
+       <script type="text/javascript">
+           function changingExercice(sel) { 
+               var theDate = sel.options[sel.selectedIndex].value; 
+               window.location = "<?php echo $this->url(array('controller' => 'index', 'action' => 'exercice'), null, true); ?>/year/"+theDate;
+               return true;
+           }
+       </script>
+    </head>
+    
+    <body>
+        
+        
+<div id="main">
+
+	<!-- ENTETE :: Tray -->
+	<div id="tray" class="box">
+
+		<p class="f-left box"> 
+			<!-- Switcher 
+			<span class="f-left" id="switcher">
+				<a href="#" rel="1col" class="styleswitch ico-col1" title="Display one column"><img src="design/switcher-1col.gif" alt="1 Column" /></a>
+				<a href="#" rel="2col" class="styleswitch ico-col2" title="Display two columns"><img src="design/switcher-2col.gif" alt="2 Columns" /></a>
+			</span>
+                        
+                        <strong>GRH &rsaquo; Application de Gestion des Formations</strong> v1.0-->
+		</p>
+		<p class="f-right"> <br>
+                    <!-- Formulaire de changement d'exercice -->
+                    <?php $startDate = 2013;
+                          //echo new Application_Form_FilterDataByExerciceForm(array('startYear'=>$startDate)); ?>
+                    <select name="changeExercice" onchange="changingExercice(this)">
+                        <?php for($k=date('Y'); $k>=$startDate; $k--) : ?>
+                            <option value="<?php echo $k;?>" <?php if($k==$this->exercice) echo "selected";?> > exercice <?php echo $k;?></option>
+                        <?php endfor; ?>
+                    </select>
+                    | 
+                    <?php $userInfo = Zend_Auth::getInstance()->getStorage()->read(); ?>
+                    <strong><?php echo $userInfo->utilisateur;?></strong> - <em><?php echo $userInfo->fonction;?></em>
+                     &nbsp;<strong>
+                <a href="<?php echo $this->url(array('controller' => 'auth', 'action' => 'logout'), null, true); ?>" id="logout">D&eacute;connexion</a></strong>
+                </p>
+
+	</div> <!--  /tray <hr class="noscreen" />-->
+        
+        <ul id="jsddm">
+                <li><a href="#"><img src="<?php echo $this->baseUrl(); ?>/images/arrow.png" align="absmiddle" /> gestion formation</a>
+                    <ul>
+                        <li><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true); ?>">&rsaquo; calendrier</a></li>
+                        <li><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'done'), null, true); ?>">&rsaquo; formations r&eacute;alisées</a></li>
+                        <li><a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'reporting'), null, true); ?>">&rsaquo; reporting formation</a></li>
+                        <li><a href="<?php echo $this->url(array('controller' => 'dashboard', 'action' => 'index'), null, true); ?>">&rsaquo; tableau de bord</a></li>
+                        <li><a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'add'), null, true); ?>">&rsaquo; enregistrer formation</a></li>
+                    </ul>
+                </li>
+                <li><a href="#"><img src="<?php echo $this->baseUrl(); ?>/images/arrow.png" align="absmiddle" /> salarié OCIT</a>
+                    <ul>
+                        <li><a href="<?php echo $this->url(array('controller' => 'personnel', 'action' => 'index'), null, true); ?>">&rsaquo; liste du personnel</a></li>
+                        <li><a href="<?php echo $this->url(array('controller' => 'personnel', 'action' => 'add'), null, true); ?>">&rsaquo; enregistrer salarié</a></li>
+                   </ul>
+                </li>
+                <li><a href="<?php echo $this->url(array('controller' => 'direction', 'action' => 'index'), null, true); ?>"><img src="<?php echo $this->baseUrl(); ?>/images/arrow.png" align="absmiddle" /> directions OCIT</a></li>
+                <li><a href=""><img src="<?php echo $this->baseUrl(); ?>/images/arrow.png" align="absmiddle" /> cabinets de formation</a>
+                   <ul>
+                        <li><a href="<?php echo $this->url(array('controller' => 'organisme', 'action' => 'index'), null, true); ?>">&rsaquo; liste des cabinets</a></li>
+                        <li><a href="<?php echo $this->url(array('controller' => 'organisme', 'action' => 'add'), null, true); ?>">&rsaquo; enregistrer cabinet</a></li>
+                   </ul>
+                </li>
+                <li><a href="<?php echo $this->url(array('controller' => 'budget', 'action' => 'index'), null, true); ?>"><img src="<?php echo $this->baseUrl(); ?>/images/arrow.png" align="absmiddle" /> budget <?php echo $this->exercice; ?></a></li>
+                <li><a href="#"><img src="<?php echo $this->baseUrl(); ?>/images/arrow.png" align="absmiddle" /> paramétrages</a>
+                    <ul>
+                        <li><a href="<?php echo $this->url(array('controller' => 'utilisateur', 'action' => 'index'), null, true); ?>">&rsaquo; accès utilisateur</a></li>
+                        <li><a href="<?php echo $this->url(array('controller' => 'pays', 'action' => 'index'), null, true); ?>">&rsaquo; pays</a></li>
+                    </ul>
+                </li>     
+        </ul>
+      <div class="clear"> </div> 
+        
+        
+	<!-- Menu  id="menu-active" 
+	<div id="menu" class="box"> 
+
+            <ul class="box">
+                     <li><a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index'), null, true); ?>"><span>gestion des formations</span></a></li> 
+                     <li><a href="<?php echo $this->url(array('controller' => 'organisme', 'action' => 'index'), null, true); ?>"><span>organismes de formation</span></a></li>
+                     <li><a href="<?php echo $this->url(array('controller' => 'personnel', 'action' => 'index'), null, true); ?>"><span>liste du personnel</span></a></li>
+                     <li><a href="<?php echo $this->url(array('controller' => 'direction', 'action' => 'index'), null, true); ?>"><span>directions</span></a></li>
+                     <li><a href="<?php echo $this->url(array('controller' => 'budget', 'action' => 'index'), null, true); ?>"><span>budget <?php echo date('Y'); ?></span></a></li>
+             </ul>
+
+	</div> -->
+        <!-- /header <hr class="noscreen" /> -->
+	
+        <!-- Columns cols by default -->
+	<div id="col" class="box">
+
+		<?php echo $this->layout()->content; ?>
+
+	</div> <!-- /cols -->
+
+	<hr class="noscreen" />
+
+	<!-- Footer -->
+         <?php echo $this->placeholder('footer'); ?>
+	 <!-- /footer -->
+
+</div> <!-- /main -->
+
+</body>
+</html>

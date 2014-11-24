@@ -1,0 +1,69 @@
+  
+ <!-- SOUS MENU FORMATION -->
+ <?php 
+ 
+ $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+
+ ?>
+ 
+  <div id="submenu" class="vertical padding box">                  
+       
+      
+        <p class="btn-link box">
+            <a <?php if($controller=='formation') echo 'class="current"';?>
+                href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'detail', 'id' => $this->id_formation), null, true); ?>">
+               <span>1. informations générales</span></a>
+        </p>
+        
+         <p class="btn-link box">
+            <a  <?php if($controller=='session-formation') echo 'class="current"';?>
+                href="<?php echo $this->url(array('controller' => 'session-formation', 'action' => 'index', 'id_formation' =>$this->id_formation), null, true); ?>">
+                <span>2. gestion des sessions</span>
+            </a>
+        </p>
+        
+        <p class="btn-link box">
+            <a <?php if($controller=='formation-cout-direct') echo 'class="current"';?>
+                href="<?php echo $this->url(array('controller' => 'formation-cout-direct', 'action' => 'index', 'id_formation' => $this->id_formation), null, true); ?>">
+               <span>3. coûts direct formation</span></a>
+        </p>
+        
+                
+        <p class="btn-link box">
+            <a  <?php if($controller=='session-cout-indirect') echo 'class="current"';?>
+                href="<?php echo $this->url(array('controller' => 'session-cout-indirect', 'action' => 'index', 'id_formation' =>$this->id_formation), null, true); ?>">
+                <span>4. coûts indirect formation</span>
+            </a>
+        </p>
+        
+        <p class="btn-link box">
+            <a  <?php if($controller=='auditeur') echo 'class="current"';?>
+            <a href="<?php echo $this->url(array('controller' => 'auditeur', 'action' => 'index', 'id_formation' =>$this->id_formation), null, true); ?>">
+                    <span>5. gestion auditeurs</span></a>
+        </p>
+        
+        
+        <?php if($this->type_formateur== 1) { ?>
+        <p class="btn-link box">
+            <a  <?php if($controller=='organisme-formation') echo 'class="current"';?>
+                href="<?php echo $this->url(array('controller' => 'organisme-formation', 'action' => 'index', 'id_formation' =>$this->id_formation), null, true); ?>">
+                <span>6. organisme de formation</span></a>
+        </p>
+        <?php } else if($this->statutFormation == 0) { ?>
+        <p class="btn-link box">
+            <a href="<?php echo $this->url(array('controller' => 'formation-interne', 'action' => 'index', 'id_formation' =>$this->id_formation), null, true); ?>">
+                <span>6. formateur interne</span></a>
+        </p>        
+        <?php } ?>
+        
+         <p class="btn-link box">
+            <a  <?php if($controller=='objectif-formation') echo 'class="current"';?>
+                href="<?php echo $this->url(array('controller' => 'objectif-formation', 'action' => 'index', 'id_formation' =>$this->id_formation), null, true); ?>">
+                <span>7. management objectifs</span>
+            </a>
+        </p>
+        
+
+
+    </div>
+

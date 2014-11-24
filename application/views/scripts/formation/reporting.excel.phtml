@@ -1,0 +1,119 @@
+<?php  /*header("Content-Type: application/vnd.ms-excel");
+       header("Expires: 0");
+       header("Content-Transfer-Encoding: binary");
+       header("Cache-Control: must-revalidate, post-check=0, pre-check=0");*/
+       header("content-disposition: attachment;filename=reporting-formation-".time().".xls");
+?>
+
+<div id="content" class="box clear">
+    
+  
+    <h3 class="tit">
+        Reporting formation <?php if(!count($this->sortString)) echo ' &rsaquo; '.date('m-Y');?>
+        <?php 
+        if(count($this->sortString)) :
+          echo '<span class="sortTitle">';
+          if(array_key_exists('entite', $this->sortString)) echo ' &rsaquo; '.$this->sortString['entite'];
+          if(array_key_exists('pole', $this->sortString)) echo ' &rsaquo; Pôle '.$this->sortString['pole'];
+          if(array_key_exists('domaine', $this->sortString)) echo ' &rsaquo; Domaine '.$this->sortString['domaine'];
+          if(array_key_exists('direction', $this->sortString)) echo ' &rsaquo; '.$this->sortString['direction'];
+          echo (array_key_exists('date_debut', $this->sortString)) ? ' &rsaquo; '.$this->sortString['date_debut'] : ' &rsaquo; '.date('m-Y');
+          if(array_key_exists('date_fin', $this->sortString)) echo ' à '.$this->sortString['date_fin'];
+          echo '</span>';
+       endif;
+        ?>
+    </h3>
+    
+    <!-- Liste des formations  -->
+    <table class="list">
+        <thead>
+            <th>Direction</th>
+            <th>Domaine</th>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Prenoms</th>
+            <th>Genre</th>
+            <th>Ann&eacute;e naissance</th>
+            <th>Nationalit&eacute;</th>
+            <th>Fonction</th>
+            <th>Cat&eacute;gorie</th>
+            <th>Embauch&eacute; le</th>
+            <th>CNPS</th>
+            <th>Date debut</th>
+            <th>Date fin</th>
+            <th>Dur&eacute;e <br>J</th>
+            <th>Nb Heure</th>
+            <th>Cout direct</th>
+            <th>Cout indirect </th>
+            <th>Total</th>
+      </thead>
+      <tbody>
+        <?php $totalParticipant = 0; $totalJour = 0; $totalHeure = 0; 
+              foreach($this->reports as $reportKey=>$reportValue) : 
+                  $nbJour = 0; $nbHeure = 0; 
+               
+        ?>
+        <tr> 
+            <td class="groupBy" colspan="6"><?php echo $reportKey; ?></td>
+            <td></td>
+            <td class="groupBy" colspan="2"><?php echo count($reportValue); ?> participants</td>
+            <td></td>
+            <td class="groupBy" colspan="3"> 
+                <?php echo ($reportValue[0]['organisme']=='' ? 'Formateur interne' : 'Cabinet '.$reportValue[0]['organisme']);?>
+            </td>
+       </tr>
+         <?php foreach ($reportValue as $report) :  ?>
+          <tr>
+              <td><?php echo $report['direction'];?></td>
+              <td width="10" align="center"><?php 
+                    if($report['domaine_formation']=='Technique')echo 'T';
+                    elseif($report['domaine_formation']=='Client')echo 'C';
+                    if($report['domaine_formation']=='Support')echo 'S';
+              ?>
+              </td>
+              <td align="center"><?php echo $report['matricule'];?></td>
+              <td><?php echo ($report['nom']);?></td>
+              <td><?php echo $report['prenoms'];?></td>
+              <td><?php echo $report['genre'];?></td>
+              <td><?php echo $report['date_naissance'];?></td>
+              <td><?php echo $report['nationalite'];?></td>
+              <td><?php echo $report['fonction'];?></td>
+              <td><?php echo ($report['categorie']);?></td>
+              <td><?php echo $report['date_embauche'];?></td>
+              <td><?php echo $report['cnps'];?></td>
+              <td><?php echo date('d.m.Y',  strtotime($report['date_debut']));?></td>
+              <td><?php echo date('d.m.Y',  strtotime($report['date_fin']));?></td>
+              <td align="center"><?php echo $report['nombre_jour']; $nbJour += $report['nombre_jour'];?></td>
+              <td align="center"><?php echo $report['nombre_heure_jour']; $nbHeure += $report['nombre_heure_jour'];?></td>
+          </tr>
+         <?php endforeach; ?>
+          
+        <tr class="sub-result">
+            <td colspan='14'></td>
+            <td align="center"><?php echo $nbJour;?>jr</td>
+            <td align="center"><?php echo $nbHeure;?>H</td>
+            <td colspan="2"></td>
+       </tr>
+       <?php
+            $totalJour += $nbJour;
+            $totalHeure += $nbHeure;
+            $totalParticipant += count($reportValue);
+       ?>
+       <?php endforeach; ?>
+       
+        <tr class="result">
+            <td colspan="7">total g&eacute;n&eacute;ral</td>
+            <td align="center" colspan="2"><?php echo $totalParticipant;?> participants</td>
+            <td colspan="5"></td>
+            <td align="center"><?php echo $totalJour;?> jr</td>
+            <td align="center"><?php echo $totalHeure;?> h</td>
+            <td colspan="2"></td>
+        </tr>   
+      </tbody>
+    </table>
+
+
+</div> 
+
+
+

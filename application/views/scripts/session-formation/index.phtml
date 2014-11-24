@@ -1,0 +1,93 @@
+
+<!-- Aside (Left Column) -->
+<div id="aside" class="box">
+
+    <?php echo $this->partial('common/formation_submenu.phtml',
+                               array('id_formation' => $this->formation['id'],
+                                      'type_formateur' => $this->formation['type_formateur']
+                                     )
+                             );
+?>
+
+</div> <!-- /aside -->
+
+<hr class="noscreen" />
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h4 class="tit">  Sessions &rsaquo; <?php echo $this->formation['intitule']; ?> </h4>
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+    
+
+    
+    <!-- Liste des formations  -->
+    <table class="list">
+        <tr>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Nb Jour</th>
+            <th>Nb Heure/Jr</th>
+            <th>Volume Horaire</th>
+            <th>Localisation</th>
+            <th>Nombre auditeur</th>
+            <th>Status</th>
+            <th>&nbsp;</th>
+        <?php $totalNbJour = 0; $totalVolHoraire =0; $totalAuditeur = 0;
+              foreach($this->sessions as $s) { ?>
+        <tr>
+            <td><?php echo date('d.m.Y',strtotime($s['date_debut'])); ?></td>
+            <td><?php echo date('d.m.Y',strtotime($s['date_fin'])); ?> </td>
+            <td align="center"><?php echo $s['nombre_jour']; $totalNbJour+=$s['nombre_jour']; ?> </td>
+            <td align="center"><?php echo $s['nombre_heure_jour'];;?> </td>
+            <td align="center"><?php echo $s['nombre_heure_jour']*$s['nombre_jour'].' h'; $totalVolHoraire+= $s['nombre_heure_jour']*$s['nombre_jour']?> </td>
+            <td><?php echo $s['localisation']; ?> </td>
+              <td align="center"><?php echo $s['auditeur_prevu']; $totalAuditeur += $s['auditeur_prevu'];?> </td>
+            <td align="center">
+                 <?php
+                    switch($s['status']) {
+                        case 0 : echo '<font color="green">en attente</font>'; break;
+                        case 1 : echo '<font color="orange">terminé</font>'; break;
+                        case -1 : echo '<font color="red">en cours</font>'; break;
+                        case 2 : echo '<font color="black">non réalisé</font>'; break;
+                    } 
+                 ?> 
+            </td>
+            <td class="actions"> 
+                <a href="<?php echo $this->url(array('controller' => 'session-formation', 'action' => 'edit', 'id_formation'=>$this->formation['id'], 'id_session'=>$s['id']), null, true); ?>" class="edit">
+                    modifier
+                </a> &nbsp;
+                <a href="" class="delete">
+                    supprimer
+                </a>
+            </td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td align="center"><?php echo $totalNbJour;?> jours</td>
+            <td>&nbsp;</td>
+            <td align="center"><?php echo $totalVolHoraire;?> H</td>
+            <td></td>
+            <td align="center"><?php echo $totalAuditeur;?></td>
+        </tr>
+   </table>
+    
+    
+    <!-- ACTION BAR -->
+    <div class="actionBar">
+        
+        <a href="<?php echo $this->url(array('controller' => 'session-formation', 'action' => 'add', 'id_formation' =>$this->formation['id']), null, true); ?>" class="add">
+            nouvelle session
+        </a>
+        
+    </div>
+    
+    
+</div> <!-- /content -->

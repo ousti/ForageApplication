@@ -1,0 +1,53 @@
+/* 
+    Document   : menu
+    Created on : 26 mars 2013, 14:35:46
+    Author     : c_odiallo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#jsddm
+{	margin: 0;
+        margin-left: 15px;
+	padding: 0
+}
+
+	#jsddm li
+	{	float: left;
+		list-style: none;
+		font: 12px Helvetica, Arial}
+
+	#jsddm li a
+	{	display: block;
+		background: #324143;
+		padding: 5px 12px;
+		text-decoration: none;
+		border-right: 1px solid white;
+		width: 140px;
+		color: #FFF;
+                text-align: center;
+		white-space: nowrap}
+
+	#jsddm li a:hover
+	{	background:#555555}
+		
+		#jsddm li ul
+		{	margin: 0;
+			padding: 0;
+			position: absolute;
+			visibility: hidden;
+			border-top: 1px solid white}
+		
+			#jsddm li ul li
+			{	float: none;
+				display: inline}
+			
+			#jsddm li ul li a
+			{	width: 140px;;
+				background:#999;
+				color: #FFF;
+                                text-align: left;
+                        }
+			
+			#jsddm li ul li a:hover
+			{	background: #666;}

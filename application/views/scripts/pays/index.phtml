@@ -1,0 +1,33 @@
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">Pays enregistrés</h3>
+    
+      <!-- ACTION BAR -->
+    <div class="actionBar" align="right">
+        
+        <a href="<?php echo $this->url(array('controller' => 'pays', 'action' => 'add'), null, true); ?>" class="add">
+            ajouter pays
+        </a>
+    </div>
+      <br><br>
+      
+    <table class="list" width="50%">
+        <tr>
+            <th>Pays</th>
+        </tr>
+        <?php foreach($this->pays as $p) { ?>
+        <tr>
+            <td><?php echo $p['pays'];?></td>
+         <!--  <td class="actions"> 
+                 <a href="<?php echo $this->url(array('controller' => 'personnel', 'action' => 'index', 'id'=>$personnel['id']), null, true); ?>" class="detail">
+                    détail
+                </a> 
+            </td>-->
+        </tr>
+        <?php } ?>
+    </table>
+
+</div> <!-- /content -->

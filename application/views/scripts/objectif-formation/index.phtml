@@ -1,0 +1,62 @@
+
+<!-- Aside (Left Column) -->
+<div id="aside" class="box">
+
+    <?php echo $this->partial('common/formation_submenu.phtml',
+                               array('id_formation' => $this->formation['id'],
+                                      'type_formateur' => $this->formation['type_formateur']
+                                     )
+                             );
+?>
+
+</div> <!-- /aside -->
+
+<hr class="noscreen" />
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h4 class="tit">  Objectifs &rsaquo; <?php echo $this->formation['intitule']; ?> </h4>
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+    
+
+    
+    <!-- Liste des formations  -->
+    <table class="list">
+        <tr>
+            <th>Objectif</th>
+            <th>retenu pour evaluation</th>
+            <th>&nbsp;</th>
+        <?php foreach($this->objectifs as $objectif) { ?>
+        <tr>
+            <td><?php echo $objectif['objectif']; ?></td>
+            <td align="center"><?php echo $objectif->evaluation==1 ? "Oui" : "Non"; ?> </td>
+            <td class="actions"> 
+                <a href="<?php echo $this->url(array('controller' => 'objectif-formation', 'action' => 'edit', 'id_formation'=>$this->formation['id'], 'id_objectif'=>$objectif['id']), null, true); ?>" class="edit">
+                    modifier
+                </a> &nbsp;
+                <a href="" class="delete">
+                    supprimer
+                </a>
+            </td>
+        </tr>
+        <?php } ?>   
+   </table>
+    
+    
+    <!-- ACTION BAR -->
+    <div class="actionBar">
+        
+        <a href="<?php echo $this->url(array('controller' => 'objectif-formation', 'action' => 'add', 'id_formation' =>$this->formation['id']), null, true); ?>" class="add">
+            nouvel objectif
+        </a>
+        
+    </div>
+    
+    
+</div> <!-- /content -->

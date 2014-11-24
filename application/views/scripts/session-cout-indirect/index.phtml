@@ -1,0 +1,148 @@
+<?php
+    $this->jQuery()->enable();
+    $this->headScript()->appendFile($this->baseUrl().'/js/ui.core.js');
+    $this->headScript()->appendFile($this->baseUrl().'/js/ui.tabs.js');
+    $this->jQuery()->addOnLoad("
+      $('.tabs > ul').tabs();
+    ");
+    
+    /*** Suppression d'un participant ************
+    $message  = 'Etes vous sur de vouloir supprimer ce participant';
+    echo $this->dialogContainer('dialog', $message, array(
+                                    'bgiframe'         => true,
+                                    'autoOpen'         => false,
+                                    'draggable'     => true,
+                                    'modal'         => true,
+                                    'resizable'     => false,
+                                    'title'         => 'Suppression Auditeur Formation',
+                                    'closeOnEscape' => true
+
+    ));
+    $url = $this->url(array(
+                            'module'     => 'default',
+                            'controller' => 'auditeur',
+                            'action'     => 'delete',
+                            'id_formation'=>$this->formation['id']
+                       ));
+    
+    $this->jQuery()->addOnLoad("
+      $('.delete-auditeur-link').click(function(){ 
+         var currentId = $(this).attr('id');
+         $('#dialog').dialog('option', 'buttons', [ 
+                     { text: 'Supprimer', click: function() {
+                        document.location = '$url/id_auditeur/'+currentId;
+                      } 
+                     }, 
+                     { text: 'Annuler', click: function() { $(this).dialog( 'close' ); } } 
+                     ] );
+         $('#dialog').dialog('open');
+          
+         
+       });
+   ");
+   */
+?>
+
+<!-- Aside (Left Column) -->
+<div id="aside" class="box">
+
+    <?php echo $this->partial('common/formation_submenu.phtml',
+                               array('id_formation' => $this->formation['id'],
+                                      'type_formateur' => $this->formation['type_formateur']
+                                     )
+                             );
+?>
+
+</div> <!-- /aside -->
+
+<hr class="noscreen" />
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h4 class="tit">  Couts indirect enregistrés &rsaquo; <?php echo $this->formation['intitule']; ?> </h4>
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+    
+    <div class="tabs box">
+        <ul>
+            <?php $i=1; foreach($this->sessions as $session) : ?>    
+            <li><a href="#tab_<?php echo $i;?>"><span>Session <?php echo $i++;?></span></a></li>
+            <?php endforeach;?>
+        </ul>
+    </div> <!-- /tabs -->
+ 
+
+ <?php $j=1; 
+       //foreach(array_keys($this->auditeurs) as $auditeur)  : 
+       foreach($this->sessions as $session) : 
+ ?>    
+ <div id="tab_<?php echo $j++;?>" class="col50s">
+    <h5> <?php $indice = $session['id'];
+               if(array_key_exists($indice,$this->couts_indirect)) : 
+               echo count($this->couts_indirect[$indice]);?> couts enregistrés</h5>
+    <p>
+    
+    <!-- Liste des couts indirects  -->
+    <table class="list">
+        <tr>
+            <th>Libellé</th>
+            <th>Montant</th>
+            <th align='center'>Prélevé sur Budget</th>
+            <th>N° BC</th>
+            <th>N° DA</th>
+            <th>Observation</th>
+            <th>&nbsp;</th>
+        <?php $total = 0; 
+              foreach($this->couts_indirect[$indice] as $cout) { ?>
+        <tr>
+            <td><?php echo $this->typesCout[$cout['id_type_cout']]['libelle']; ?></td>
+            <td align="center"><?php echo number_format($cout['valeur']); $total += $cout['valeur']; ?></td>
+              <td align='center'><?php echo $cout['entite'].' '.$cout['annee']; ?></td>
+            <td><?php echo $cout['bon_commande']; ?></td>
+            <td><?php echo $cout['demande_achat']; ?></td>
+            <td><?php echo $cout['observation']; ?></td>
+            <td class="actions"> 
+                <a href="<?php echo $this->url(array('controller' => 'session-cout-indirect', 'action' => 'edit', 
+                                                                     'id_session'=>$session['id'], 
+                                                                     'id_formation'=>$this->formation['id'], 
+                                                                      'id_type_cout'=>$cout['id_type_cout']), null, true); 
+                                                  ?>" class="edit">
+                    modifier
+                </a>&nbsp;
+               <!-- <a href="" class="delete">
+                    supprimer
+                </a> -->
+            </td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td> Total </td>
+            <td align="center"><?php echo number_format($total); ?></td>
+            <td> 
+                <a href="">
+                    
+                </a>
+            </td>
+        </tr>
+    </table>
+  </p>
+   <?php endif; ?>
+   
+    <!-- ACTION BAR -->
+    <div class="actionBar">
+        <a href="<?php echo $this->url(array('controller' => 'session-cout-indirect', 'action' => 'add', 'id_formation' =>$this->formation['id'], 'id_session' =>$session['id']), null, true); ?>" class="add">
+            nouveau coût indirect
+        </a>
+    </div>
+    
+ </div>
+    
+
+<?php endforeach;?>   
+    
+</div> <!-- /content -->

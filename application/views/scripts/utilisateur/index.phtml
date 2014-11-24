@@ -1,0 +1,30 @@
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">Accès utilisateur</h3>
+
+    <table class="list">
+        <tr>
+            <th>Utilisateur</th>
+            <th>Login</th>
+            <th>Fonction</th>
+            <th>Rôle</th>
+        </tr>
+        <?php foreach($this->utilisateurs as $u) { ?>
+        <tr>
+            <td align="center"><?php echo $u['utilisateur'];?></td>
+            <td align="center"><?php echo $u['login'];?></td>
+            <td align="center"><?php echo $u['fonction'];?></td>
+            <td align="center"><?php echo $u['role'];?></td>
+          <!--  <td class="actions"> 
+                 <a href="<?php echo $this->url(array('controller' => 'personnel', 'action' => 'index', 'id'=>$personnel['id']), null, true); ?>" class="detail">
+                    détail
+                </a> 
+            </td>-->
+        </tr>
+        <?php } ?>
+    </table>
+
+</div> <!-- /content -->

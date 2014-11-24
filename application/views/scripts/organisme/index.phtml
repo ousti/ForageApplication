@@ -1,0 +1,109 @@
+<?php
+   
+    //$this->headScript()->appendFile($this->baseUrl().'/js/ui.core.js');
+    
+    $message  = 'Etes vous sur de vouloir supprimer cet organisme ?';
+    echo $this->dialogContainer('dialog', $message, array(
+                                    'bgiframe'         => true,
+                                    'autoOpen'         => false,
+                                    'draggable'     => true,
+                                    'modal'         => true,
+                                    'resizable'     => false,
+                                    'title'         => 'Suppression Cabinet de Formation',
+                                    'closeOnEscape' => true
+
+    ));
+    $url = $this->url(array(
+                            'module'     => 'default',
+                            'controller' => 'organisme',
+                            'action'     => 'delete'
+                       ));
+    
+    $this->jQuery()->addOnLoad("
+      $('.delete-cabinet-link').click(function(){ 
+         var currentId = $(this).attr('id'); 
+         $('#dialog').dialog('option', 'buttons', [ 
+                     { text: 'Supprimer', click: function() {
+                        document.location = '$url/id_organisme/'+currentId;
+                      } 
+                     }, 
+                     { text: 'Annuler', click: function() { $(this).dialog( 'close' ); } } 
+                     ] );
+         $('#dialog').dialog('open');
+          
+         
+       });
+   ");
+?>
+
+
+<hr class="noscreen" />
+
+<div id="submenu" class="horizontal">                  
+  
+  <div class="topBar"><?php echo $this->filterCabinetForm; ?> </div>
+   
+</div>
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">Liste des organismes
+    <?php 
+        if(count($this->sortString)) :
+          echo '<span class="sortTitle">';
+          if(array_key_exists('nationalite', $this->sortString)) echo ' &rsaquo; '.$this->sortString['nationalite'];
+          echo '</span>';
+       endif;
+        ?></h3>
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+    
+    <h5> [ <?php echo count($this->organismes);?> cabinets enregistrés ]</h5>
+    <!-- Liste des organismes  -->
+    <table class="list">
+        <tr>
+            <th>Organisme</th>
+            <th>T&eacute;l</th>
+            <th>Fax</th>
+            <th>Email</th>
+            <th>Type</th>
+            <th>Localisation</th>
+           <!-- <th>Actions</th> -->
+        </tr>
+        <?php foreach($this->organismes as $organisme) { ?>
+        <tr>
+            <td><?php echo $organisme->getOrganisme(); ?></td>
+            <td><?php echo $organisme->getTel1().' - '.$organisme->getTel2(); ?></td>
+            <td><?php echo $organisme->getFax(); ?></td>
+            <td><?php echo $organisme->getEmail(); ?></td>
+            <td><?php 
+                    if($organisme->getNationalite()==1) echo 'Ivoirien FDFP';
+                   else if($organisme->getNationalite()==2) echo 'Ivoirien Non FDFP';
+                    if($organisme->getNationalite()==3) echo 'Etranger';
+                    ?>
+            </td>
+            <td><?php echo $organisme->getLocalisation();?></td>
+           
+           <td class="actions"> 
+                <a href="<?php echo $this->url(array('controller' => 'organisme', 'action' => 'edit', 'id'=>$organisme->getId()), null, true); ?>" class="edit">
+                  modifier
+                </a>
+               <?php if(!$organisme->getNbformationDone()) : ?>
+                <a class="delete delete-cabinet-link" href="#" id="<?php echo $organisme->getId();?>">
+                  supprimer
+                </a>
+                <?php endif ;?>
+               
+            </td>
+           
+        </tr>
+        <?php } ?>
+    </table>
+
+
+</div> <!-- /content -->

@@ -1,0 +1,262 @@
+<?php
+
+// Init Tab
+$formationPrevu = array();
+$formationRealise = array();
+$totalByEntite = array();
+$totalRealiseByEntite = array();
+$totalEffortRealiseByEntite = array();
+$totalHeureByEntite = array();
+$totalHeureByEntiteForMonth = array();
+ foreach($this->entites as $entite) {
+   $en = $entite['entite'];
+   $totalByEntite[$en] = 0;  
+   $totalRealiseByEntite[$en] = 0;  
+   $totalEffortRealiseByEntite[$en] = 0;  
+   $totalHeureByEntite[$en] = 0;  
+   $totalHeureByEntiteForMonth[$en] = 0;  
+ }
+?>
+<!-- ***************** CONTENT (Right Column) **********************  -->
+ 
+    <br>
+    <h4>Etat des Actions de Formations Réalisées</h4>
+   
+    <!-- Entete du Tableau  -->
+    <table class="list">
+        <tr>
+            <td colspan='2' style='border:none'></td>
+            <?php $nbDomaines = count($this->domaines)+1;
+                  foreach($this->domaines as $domaine) :  ?>
+                 <td colspan='<?php echo $nbDomaines;?>' class='collapse'><?php echo $domaine['domaine_formation'];?></td>
+            <?php endforeach;?>
+            <td colspan='4' class='collapse total'>TOTAL GENERAL OCIT</td>
+            
+        </tr>
+       <tr>
+            <td colspan='2' style='border-top:none'> </td>
+            <?php $col = $nbDomaines; // +1 for column total
+                  for($i=0;$i<$col;$i++) :
+                  foreach($this->entites as $entite) : 
+             ?>
+            <!-- COLUM FOR ENTITIES UNDER DOMAINS -->
+            <?php if($i==$col-1) $addClass = 'total-child'; else $addClass=''; ?>
+            <td class='collapse-child <?php echo $addClass;?>'><?php echo $entite['entite'];?></td>
+            <?php endforeach; ?>
+            <?php if($i<$col-1) : ?>
+            <td class='collapse-child'> total</td>
+            <?php endif;?>
+            <?php endfor; ?>
+            
+            <td class='collapse-child total'>TOTAL</td>
+        </tr>
+        <?php $nbCol = $nbDomaines*count($this->entites)+count($this->entites);?>
+        
+       <!-- ******************** ACTION DE FORMATION ************************************** -->
+         <tr><td rowspan='4'>Actions  de formation</td> </tr>
+         
+         <!-- PREVUS -->
+         <tr><td>Prévues</td> 
+           <?php 
+                  foreach($this->domaines as $domaine) : 
+                      $current = array();
+                      $df = $domaine['domaine_formation'];
+                    foreach($this->entites as $entite):
+                      $en = $entite['entite'];
+                      $countCurrentPrevu = 0;
+                      if(array_key_exists($df, $this->resultat) and array_key_exists($en, $this->resultat[$df])) {
+                        $current = $this->resultat[$df][$en];
+                        $countCurrentPrevu = count($current);
+                        $formationPrevu[$df][$en] = '';
+                        if($countCurrentPrevu) {
+                            $formationPrevu[$df][$en] = $countCurrentPrevu;
+                            $totalByEntite[$en] += $countCurrentPrevu;
+                            $formationRealise[$df][$en] = 0;
+                            foreach($current as $c) :
+                                if($c['status']==1) { 
+                                    $formationRealise[$df][$en] += 1;
+                                }
+                            endforeach;
+                             $totalRealiseByEntite[$en] += $formationRealise[$df][$en];
+                        }
+                      }
+                      
+           ?>
+                 <td align="center"><?php echo ($countCurrentPrevu ? $countCurrentPrevu : '-'); ?></td> 
+            <?php endforeach;   ?>
+            <!-- sous total par domaine -->
+            <td align="center" class="bck-color"> 
+                <?php if(array_key_exists($df,$formationPrevu)) echo array_sum($formationPrevu[$df]); ?>
+            </td>
+            <?php endforeach; ?>
+           <!-- total par entites -->
+           <?php 
+                $totalPrevu = 0;
+                foreach($this->entites as $entite): 
+                $en = $entite['entite'];
+           ?>
+                <td align="center"> 
+                    <?php echo $totalByEntite[$en]; $totalPrevu+= $totalByEntite[$en];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL PREVU -->
+           <td align="center" class="bck-color"><?php echo $totalPrevu;?> </td>
+         </tr>
+         
+         
+         <!-- FORMATION REALISEE -->
+         <tr><td>Réalisées</td>
+            <?php //Zend_Debug::dump($formationRealise, $label = 'LABEL', $echo = true);
+              foreach($this->domaines as $domaine) : 
+                  $df = $domaine['domaine_formation'];
+                foreach($this->entites as $entite):
+                  $en = $entite['entite'];
+              ?>
+            <td align="center">
+                <?php echo ((array_key_exists($df, $formationRealise) and array_key_exists($en, $formationRealise[$df])) ? $formationRealise[$df][$en] : '-'); ?>
+            </td> 
+            <?php endforeach;   ?>
+            <!-- sous total par domaine -->
+            <td align="center"  class="bck-color"> 
+                <?php if(array_key_exists($df,$formationRealise)) echo array_sum($formationRealise[$df]); ?>
+            </td>
+             <?php endforeach; ?>
+           <!-- total realises par entites -->
+           <?php 
+                $totalRealise = 0;
+                foreach($this->entites as $entite): 
+                $en = $entite['entite'];
+           ?>
+                <td align="center"> 
+                    <?php echo $totalRealiseByEntite[$en]; $totalRealise+= $totalRealiseByEntite[$en];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL REALISE -->
+           <td align="center" class="bck-color"><?php echo $totalRealise;?> </td>
+         </tr>
+         
+         
+         <!-- EFFORT DE FORMATION -->
+        <tr id="bck-color"><td>Effort de formation</td> 
+            <?php $totalEffortDomaine = array();
+             foreach($this->domaines as $domaine) : 
+                 $df = $domaine['domaine_formation'];
+                 $totalEffortDomaine[$df] = 0;
+               foreach($this->entites as $entite):
+                 $en = $entite['entite'];
+             ?>
+           <td align="center">
+               <?php if(array_key_exists($df, $formationPrevu) and array_key_exists($en, $formationPrevu[$df])
+                        and array_key_exists($df, $formationRealise) and array_key_exists($en, $formationRealise[$df])
+                       and $formationPrevu[$df][$en]<>''
+                       ) :
+                      $val = $formationRealise[$df][$en]/$formationPrevu[$df][$en];
+                      $totalEffortDomaine[$df] += $val;
+                      echo ($val*100).'%';
+                      endif;
+                       ?>
+           </td> 
+        <?php endforeach;   ?>
+        <td align="center" class="bck-color"> 
+        <?php if(array_key_exists($df,$totalEffortDomaine)) echo $totalEffortDomaine[$df]; ?>
+        </td>
+        <?php endforeach; ?>
+           <!-- total realises par entites -->
+           <?php 
+                $totalEffortRealise = 0;
+                foreach($this->entites as $entite): 
+                $en = $entite['entite'];
+           ?>
+                <td align="center"> 
+                    <?php if($totalByEntite[$en])
+                          echo ($totalRealiseByEntite[$en]/$totalByEntite[$en]*100).'%'; 
+                          $totalEffortRealise += $totalRealiseByEntite[$en];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL REALISE -->
+           <td align="center" class="bck-color">
+               <?php if($totalPrevu) echo number_format($totalRealise/$totalPrevu*100).'%';?> 
+           </td>
+         </tr>
+        </tr>
+        
+        
+     
+       <!-- ******************** HEURE DE FORMATION ************************************** --> 
+      
+        <tr><td rowspan='3'>Nombre d'heures de formation</td> </tr>
+        <tr><td>H_FOR_PM</td> 
+          <?php $totalHeureDomaine = array();
+                  foreach($this->domaines as $domaine) : 
+                      $df = $domaine['domaine_formation'];
+                      $totalHeureDomaine[$df] = 0;
+                    foreach($this->entites as $entite):
+                      $en = $entite['entite'];
+                      if(array_key_exists($df, $this->heuresFormationMoisEnCours) and array_key_exists($en, $this->heuresFormationMoisEnCours[$df])) {
+                        $val = $this->heuresFormationMoisEnCours[$df][$en]['heureTotalEntite']; 
+                        $totalHeureByEntiteForMonth[$en] += $val;
+                        $totalHeureDomaine[$df] += $val;
+                      }
+                      else
+                        $val = '-';
+           ?>
+             <td align="center"><?php echo $val; ?></td> 
+            <?php endforeach;   ?>
+           <td align="center" class="bck-color"> 
+             <?php if(array_key_exists($df,$totalHeureDomaine)) echo $totalHeureDomaine[$df]; ?>
+            </td>
+             <?php endforeach; ?>
+           <!-- total par entites -->
+           <?php 
+                $totalHeure = 0;
+                foreach($this->entites as $entite): 
+                $en = $entite['entite'];
+           ?>
+                <td align="center"> 
+                    <?php echo $totalHeureByEntiteForMonth[$en]; $totalHeure+= $totalHeureByEntiteForMonth[$en];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL HEURE FORMATION -->
+           <td align="center" class="bck-color"><?php echo $totalHeure;?>
+  
+        </tr>
+        <tr><td>H_FOR_YTD</td> 
+            <?php $totalHeureDomaineYTD = array();
+                  foreach($this->domaines as $domaine) : 
+                      $df = $domaine['domaine_formation'];
+                      $totalHeureDomaineYTD[$df] = 0;
+                    foreach($this->entites as $entite):
+                      $en = $entite['entite'];
+                      if(array_key_exists($df, $this->heuresFormation) and array_key_exists($en, $this->heuresFormation[$df])) {
+                        $val = $this->heuresFormation[$df][$en]; 
+                        $totalHeureByEntite[$en] += $val;
+                        $totalHeureDomaineYTD[$df] += $val;
+                      }
+                      else
+                        $val = '-';
+           ?>
+             <td align="center"><?php echo $val; ?></td> 
+            <?php endforeach;   ?>
+          <td align="center" class="bck-color"> 
+             <?php if(array_key_exists($df,$totalHeureDomaineYTD)) echo $totalHeureDomaineYTD[$df]; ?>
+            </td>
+             <?php endforeach; ?>   
+           <!-- total par entites -->
+           <?php 
+                $totalHeure = 0;
+                foreach($this->entites as $entite): 
+                $en = $entite['entite'];
+           ?>
+                <td align="center"> 
+                    <?php echo $totalHeureByEntite[$en]; $totalHeure+= $totalHeureByEntite[$en];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL HEURE FORMATION -->
+           <td align="center" class="bck-color"><?php echo $totalHeure;?> </td>
+        </tr>
+        
+    </table>
+    <br><br>
+
+    
+    

@@ -1,0 +1,105 @@
+
+<hr class="noscreen" />
+
+<?php
+    $this->jQuery()->enable();
+    $this->jQuery()->addOnLoad("
+      $('.tabs > ul').tabs();
+    ");
+    
+    $this->headScript()->appendFile($this->baseUrl().'/js/ui.core.js');
+    $this->headScript()->appendFile($this->baseUrl().'/js/ui.tabs.js');
+
+    
+?>
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">Liste des directions</h3>
+    
+    <div class="tabs box">
+        <ul>
+            <?php foreach(array_keys($this->directions) as $pole) : ?>    
+            <li><a href="#tab_<?php echo $pole;?>"><span> <?php echo $pole;?></span></a></li>
+            <?php endforeach;?>
+        </ul>
+    </div> <!-- /tabs -->
+    
+   
+    <!-- Liste des directions  -->
+  <?php foreach(array_keys($this->directions) as $pole) : ?>    
+ <div id="tab_<?php echo $pole;?>" class="col50s">
+     <h5> [<?php echo count($this->directions[$pole]);?> enregistrements]</h5>
+    <p>
+       <table class="list">
+        <tr>
+            <th align="center">Direction</th>
+            <th align="center">Formations réalisées</th>
+            <th>&nbsp;</th>
+        </tr>
+       <?php foreach($this->directions[$pole] as $direction) { ?>
+        <tr>
+            <td align="center"><?php echo $direction['direction'];?></td>
+            <td align="center"><?php echo $direction['nbFormation'];?></td>
+            <td class="actions"> 
+                <!--<a href="<?php echo $this->url(array('controller' => 'direction', 'action' => 'detail', 'id'=>$direction['id']), null, true); ?>" class="detail">
+                    détail
+                </a>-->
+            </td>
+        </tr>
+        <?php } ?>
+    </table>
+    </p>
+ </div>
+<?php endforeach;?>
+    
+     <!-- DETAIL FORMATION -->
+   <?php if(isset($this->salarie) and $this->salarie<>NULL) : ?>
+    <div class="col50 f-right">
+	<p class="t-justify">
+            <!-- Infos Generales -->
+            <table style="border:none;">
+                <tr>
+                    <th><?php echo $this->salarie->getNom().' '.$this->salarie->getPrenoms();?></th>
+                </tr>
+                <tr>
+                    <td class="label"> Matricule : <?php echo $this->salarie->getMatricule();?></td>
+                    <td class="label"> Genre : <?php echo $this->salarie->getGenre();?></td>
+                </tr>
+                <tr>
+                    <td class="label"> Né(e) le : <?php echo $this->salarie->getDate_naissance();?></td>
+                    <td class="label"> Embauché le: <?php echo $this->salarie->getDate_embauche();?></td>
+                </tr>
+                <tr>
+                    <td class="label"> Nationalité : <?php echo $this->salarie->getNationalite();?></td>
+                    <td class="label"> CNPS : <?php echo $this->salarie->getCnps();?></td>
+                </tr>
+              </table>
+        
+            <!-- Actions de formations -->
+            <h4>Formations recues</h4>
+            <table style="border:none;">
+                <tr>
+                    <th>Intitulé</th>
+                    <th>Débuté le</th>
+                    <th>Fini le</th>
+                </tr>
+                <tr>
+                    <td>Formation à l'Outill d'administration, d'expliotation IP</td>
+                    <td>23.01.2013</td>
+                    <td>26.01.2013</td>
+                </tr>
+                <tr>
+                    <td>Formation à l'Outill d'administration, d'expliotation IP</td>
+                    <td>23.01.2013</td>
+                    <td>26.01.2013</td>
+                </tr>
+                
+              </table>
+        </p>
+
+    </div> <!-- /col50 -->
+   <?php endif; ?>
+
+</div> <!-- /content -->

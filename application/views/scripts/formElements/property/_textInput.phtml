@@ -1,0 +1,10 @@
+
+<div class="formrow">
+    <label><?php echo $this->element->getLabel() ?> : </label>
+    <?php echo $this->{$this->element->helper}($this->element->getName(), $this->element->getValue(), $this->element->getAttribs()); ?>
+        <?php if ($this->element->hasErrors()): ?>
+            <div class="error">
+                <?php echo $this->formErrors($this->element->getMessages()); ?>
+            </div>
+        <?php endif; ?>
+</div>

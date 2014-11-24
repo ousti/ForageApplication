@@ -1,0 +1,98 @@
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box clear">
+    
+    <!-- System Messages -->
+    <h3 class="tit">Calendriers actions de formation - <?php echo $this->exerciceYear; ?></h3>
+   
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+   
+   <h5> [ <?php echo $this->count;?> enregistrements ]
+       <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index', 'format' =>'excel'), null, true); ?>">
+    <img src="<?php echo $this->baseUrl().'../images/actions/export-xls.png'; ?>" width="25" height="25" id="exportLink" alt="exporter sous excel" align="absmiddle" />
+   </a></h5>
+    
+    <!-- Liste des formations  -->
+    <table class="list">
+        <tr>
+            <th>Direction</th>
+            <th>Intitul&eacute;</th>
+            <th width="55">Période</th>
+            <th>Durée <br> jours</th>
+            <th>Nbre<br>d'heures</th>
+            <th>Auditeur <br>prévus</th>
+            <th>Type</th>
+            <th>Organisme</th>
+            <th>Lieu<br>formation</th>
+            <th>Cout direct</th>
+            <!-- <th>Actions</th> -->
+        </tr>
+        <?php $totalCoutDirect = 0; $totalJour = 0; $totalAuditeur = 0;
+              for($mois=0; $mois<=count(Misc_Utils::getMoisAnnee()); $mois++) : 
+              if(array_key_exists($mois, $this->calendrierActionFormation)) : 
+            ?>
+        <tr> <td></td>
+             <td class="groupBy"><?php echo ($mois==0 ? 'non défini' : Misc_Utils::getMoisAnnee($mois)); ?></td>
+            <td colspan="2"></td>
+       </tr>
+            <?php 
+                  $formations = $this->calendrierActionFormation[$mois];
+                  foreach($formations as $formation) { ?>
+            <tr>
+                <td><?php echo $formation['direction']; ?></td>
+                <td> <a href="<?php echo $this->url(array('controller' => 'formation', 'action' => 'detail', 'id'=>$formation['id']), null, true); ?>">
+                        <?php echo $formation['intitule']; ?>
+                     </a>
+                </td>
+                <td align="center">
+                     <?php if($mois<>0) {
+                              $date = explode("-",$formation['date_debut']);
+                              echo $date[2].'/'.$date[1];
+                           } else echo '-';
+                    ?> -
+                    <?php if($mois<>0) {
+                              $date = explode("-",$formation['date_fin']);
+                              echo $date[2].'/'.$date[1];
+                           } else echo '-';
+                 ?></td>
+                <td align="center"> 
+                    <?php  $totalJour += $formation['nombre_jour'];
+                           echo $formation['nombre_jour'];
+                    ?>
+                </td>
+                <td align="center"> <?php echo $formation['nombre_heure_jour'];?></td>
+                <td align="center"> 
+                    <?php  $totalAuditeur += $formation['auditeur_prevu'];
+                           echo $formation['auditeur_prevu'];?>
+                </td>
+                <td align="center"> <?php echo $formation['type_formation'];?></td>
+                <td> <?php echo ($formation['type_formateur']== 0) ? 'Formateur interne' : $formation['organisme'];?></td>
+                <td> <?php echo $formation['localisation'];?></td>
+                <td align="center"> 
+                    <?php $totalCoutDirect += $formation['cout_direct'];
+                          echo number_format($formation['cout_direct']);
+                    ?>
+                </td>
+
+            </tr>
+            <?php } ?>
+        <?php endif; endfor; ?>
+         <!-- TOTAL -->
+        <tr class="result">
+            <td align="center">TOTAL</td>
+            <td colspan='2'></td>
+            <td align="center"><?php echo  $totalJour;?>jr</td>
+            <td></td>
+            <td align="center"><?php echo  $totalAuditeur;?></td>
+            <td colspan="3"></td>
+           <td align="center"><?php echo  number_format($totalCoutDirect);?></td>
+           
+       </tr>
+    </table>
+
+
+</div> <!-- /content -->

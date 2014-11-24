@@ -1,0 +1,201 @@
+<?php
+
+// Init Tab
+$totalByEntite = array();
+$totalPresentByEntite = array();
+foreach($this->entites as $entite) {
+   $en = $entite['id'];
+   $totalByEntite[$en] = 0;  
+   $totalPresentByEntite[$en] = 0;  
+}
+?>
+<!-- ***************** CONTENT (Right Column) **********************  -->
+ 
+    <br>
+    <h4>Etat des Participants aux Actions de Formations Réalisées</h4>
+   
+    <!-- Entete du Tableau  -->
+    <table class="list">
+        <tr>
+            <td colspan='2' style='border:none'></td>
+            <?php $nbDomaines = count($this->domaines)+1;
+                  foreach($this->domaines as $domaine) :  ?>
+                 <td colspan='<?php echo $nbDomaines;?>' class='collapse'><?php echo $domaine['domaine_formation'];?></td>
+            <?php endforeach;?>
+            <td colspan='4' class='collapse total'>TOTAL GENERAL OCIT</td>
+            
+        </tr>
+       <tr>
+            <td colspan='2' style='border-top:none'> </td>
+            <?php $col = $nbDomaines; // +1 for column total
+                  for($i=0;$i<$col;$i++) :
+                  foreach($this->entites as $entite) : 
+                      $totalPresent[$i+1][$entite['id']] = 0; // init tableau present domaine entité
+             ?>
+            <!-- COLUM FOR ENTITIES UNDER DOMAINS -->
+            <?php if($i==$col-1) $addClass = 'total-child'; else $addClass=''; ?>
+            <td class='collapse-child <?php echo $addClass;?>'><?php echo $entite['entite'];?></td>
+            <?php endforeach; ?>
+            <?php if($i<$col-1) : ?>
+            <td class='collapse-child'> total</td>
+            <?php endif;?>
+            <?php endfor; ?>
+            
+            <td class='collapse-child total'>TOTAL</td>
+        </tr>
+        <?php $nbCol = $nbDomaines*count($this->entites)+count($this->entites);?>
+        
+        <!-- ******************** PREVUS ********************** -->
+        <tr>
+            <td colspan='2'>Effectifs Prévus</td>
+             <?php $totalDomaine = array();
+                  
+                foreach($this->domaines as $domaine) : 
+                    $totalDomaine[$domaine['id']] = 0;
+                    foreach($this->entites as $entite):
+                    
+              ?>
+            <td align="center">
+                <?php if(array_key_exists($domaine['id'], $this->etatParticipant) and array_key_exists($entite['id'], $this->etatParticipant[$domaine['id']])) : 
+                      echo $val = count($this->etatParticipant[$domaine['id']][$entite['id']]); 
+                      $totalDomaine[$domaine['id']] += $val;
+                      $totalByEntite[$entite['id']] += $val;
+                       endif; 
+                ?>
+            </td> 
+            <?php endforeach;   ?>
+            <!-- sous total par domaine -->
+            <td align="center"  class="bck-color"> 
+                <?php  if(array_key_exists($domaine['id'], $this->etatParticipant)) 
+                       echo $totalDomaine[$domaine['id']]; 
+                ?>
+            </td>
+             <?php endforeach; ?>
+            <!-- par entites  -->
+           <?php 
+                $totalRealise = 0;
+                foreach($this->entites as $entite): 
+           ?>
+                <td align="center"> 
+                    <?php echo $totalByEntite[$entite['id']]; $totalRealise+= $totalByEntite[$entite['id']];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL REALISE -->
+           <td align="center" class="bck-color"><?php echo $totalRealise;?> </td>
+         </tr>
+         
+         
+        <!-- ******************** PRESENTS ********************** -->
+        <tr>
+            <td colspan='2'>Effectifs Présents</td>
+             <?php $totalDomainePresent = array();
+                  
+                foreach($this->domaines as $domaine) : 
+                    $totalDomainePresent[$domaine['id']] = 0;
+                    foreach($this->entites as $entite):
+                    
+              ?>
+            <td align="center">
+                <?php if(array_key_exists($domaine['id'], $this->participantPresent) and array_key_exists($entite['id'], $this->participantPresent[$domaine['id']])) : 
+                      echo $val = $this->participantPresent[$domaine['id']][$entite['id']]; 
+                      $totalDomainePresent[$domaine['id']] += $val;
+                      $totalPresentByEntite[$entite['id']] += $val;
+                      endif; 
+                ?>
+            </td> 
+            <?php endforeach;   ?>
+            <!-- sous total par domaine -->
+            <td align="center"  class="bck-color"> 
+                <?php  if(array_key_exists($domaine['id'], $this->participantPresent)) 
+                       echo $totalDomainePresent[$domaine['id']]; 
+                ?>
+            </td>
+             <?php endforeach; ?>
+            <!-- par entites  -->
+           <?php 
+                $totalRealise = 0;
+                foreach($this->entites as $entite): 
+           ?>
+                <td align="center"> 
+                    <?php echo $totalPresentByEntite[$entite['id']]; $totalRealise+= $totalPresentByEntite[$entite['id']];?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL REALISE -->
+           <td align="center" class="bck-color"><?php echo $totalRealise;?> </td>
+         </tr>
+         
+         
+        <!-- ******************** TX_ PRE_FOR ********************** -->
+        <tr>
+            <td colspan='2'>TX_ PRE_FOR</td>
+             <?php foreach($this->domaines as $domaine) : 
+                   foreach($this->entites as $entite):
+                    
+              ?>
+            <td align="center">
+                <?php if(array_key_exists($domaine['id'], $this->etatParticipant) and array_key_exists($entite['id'], $this->etatParticipant[$domaine['id']]) AND 
+                         count($this->etatParticipant[$domaine['id']][$entite['id']]) AND
+                         array_key_exists($domaine['id'], $this->participantPresent) and array_key_exists($entite['id'], $this->participantPresent[$domaine['id']])
+                        ): 
+                      $val = $this->participantPresent[$domaine['id']][$entite['id']]/count($this->etatParticipant[$domaine['id']][$entite['id']]); 
+                      echo number_format($val*100).'%';
+                      /*$totalDomaine[$domaine['id']] += $val;
+                      $totalPresentByEntite[$entite['id']] += $val;*/
+                      endif; 
+                ?>
+            </td> 
+            <?php endforeach;   ?>
+            <!-- sous total par domaine -->
+            <td align="center"  class="bck-color"> 
+                <?php  if(array_key_exists($domaine['id'], $totalDomaine) and $totalDomaine[$domaine['id']]>0) :
+                       $val = $totalDomainePresent[$domaine['id']]/$totalDomaine[$domaine['id']]; 
+                       echo number_format($val*100).'%';
+                       endif; 
+                ?>
+            </td>
+             <?php endforeach; ?>
+            <!-- par entites  -->
+           <?php 
+                $totalRealise = 0;
+                $k = 0;
+                foreach($this->entites as $entite): 
+           ?>
+                <td align="center"> 
+               <?php  if(array_key_exists($entite['id'], $totalByEntite) and $totalByEntite[$entite['id']]>0) :
+                       $val = $totalPresentByEntite[$entite['id']]/$totalByEntite[$entite['id']]; 
+                       echo number_format($val*100).'%';
+                       $totalRealise+= $val;
+                       $k++;
+                       endif; 
+                ?>
+                </td> 
+           <?php endforeach;?>
+           <!-- TOTAL GENERAL REALISE -->
+           <td align="center" class="bck-color"><?php if($k) echo number_format($totalRealise/$k*100);?>% </td>
+         </tr>
+
+    </table>
+    <br><br>
+    
+    <!-- 
+            TOTAL GENERAL OCIT   
+     -->
+    <table class="list">
+        <tr>
+            <td colspan='2' style='border:none'></td>
+            <?php foreach($this->entites as $entite) :  ?>
+                 <td class='collapse'><?php echo $entite['entite'];?></td>
+            <?php endforeach;?>
+            <td colspan='4' class='collapse total'>TOTAL GENERAL OCIT</td>
+        </tr>
+        <tr id="bck-color">
+            <td colspan='2'>ACTIF_FOR_YTD</td>
+            <?php foreach($this->entites as $entite) :  ?>
+                <td align="center"> <?php echo $this->actifYtd[$entite['id']]; ?> </td>
+            <?php  endforeach;?>
+            <!-- Total Actif YTD -->
+            <td align="center"> <?php echo array_sum($this->actifYtd); ?> </td>
+        </tr>
+    </table>
+    
+  

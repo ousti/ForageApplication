@@ -1,0 +1,29 @@
+<?php
+    $this->jQuery()->enable();
+?>
+
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h3 class="tit">Enregistrer un pays</h3>
+   
+    <div class="box-content">
+        <?php
+           $this->form->setAction($this->url(array("controller" => "pays", "action" => "save-form")));
+           echo $this->form;
+        ?>
+        <div class="cleaner"></div>
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="actionBar">
+        
+        <a href="<?php echo $this->url(array('controller' => 'pays', 'action' => 'index'), null, true); ?>" class="list">
+           liste des pays
+        </a>        
+    </div>
+    
+</div> <!-- /content -->
+
+
+

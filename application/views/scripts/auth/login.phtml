@@ -1,0 +1,22 @@
+
+<form action="" method="post">
+    <input type="text" name="login" class="username" placeholder="login" />
+    <input type="password" name="pwd" class="password" placeholder="•••••••••" />
+    <div class="forget"><?php if($this->errorMessage ) echo $this->errorMessage; ?></div>
+    <input type="submit" name="submit" class="submit" value="connexion" />
+</form>
+
+
+<!--
+
+<div id="content" class="box">
+
+    <div class="box-content">
+        <?php //if($this->errorMessage ) echo $this->errorMessage; ?>
+        <?php
+       // echo $this->form;
+        ?>
+        <div class="cleaner"></div>
+    </div>
+    
+</div> <!-- /content -->

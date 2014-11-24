@@ -1,0 +1,29 @@
+  
+ <?php
+ 
+      # Message passé en paramètres
+       if($this->message != '') :
+           
+           switch($this->status) {
+           
+             case 'done' : 
+                 echo '<div class="msg done">'.$this->message.'</div>';
+                 break;
+             case 'error' : 
+                 echo '<div class="msg error">'.$this->message.'</div>';
+                 break;
+             case 'warning' : 
+                 echo '<div class="msg warning">'.$this->message.'</div>';
+                 break;
+             case 'info' : 
+                 echo '<div class="msg info">'.$this->message.'</div>';
+                 break;
+           }
+           
+       endif;
+           
+ ?>
+
+
+ 
+ 

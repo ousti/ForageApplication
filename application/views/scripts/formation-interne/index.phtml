@@ -1,0 +1,144 @@
+<?php
+    $this->jQuery()->enable();
+    /*$this->headScript()->appendFile($this->baseUrl().'/js/ui.core.js');
+    $this->headScript()->appendFile($this->baseUrl().'/js/ui.tabs.js');
+    $this->jQuery()->addOnLoad("
+      $('.tabs > ul').tabs();
+    ");*/
+    /*** Suppression d'un formateur interne  *************/
+    $message  = 'Etes vous sur de vouloir supprimer ce formateur';
+    echo $this->dialogContainer('dialog', $message, array(
+                                    'bgiframe'         => true,
+                                    'autoOpen'         => false,
+                                    'draggable'     => true,
+                                    'modal'         => true,
+                                    'resizable'     => false,
+                                    'title'         => 'Suppression Formateur interne',
+                                    'closeOnEscape' => true
+
+    ));
+    $url = $this->url(array(
+                            'module'     => 'default',
+                            'controller' => 'formation-interne',
+                            'action'     => 'delete',
+                            'id_formation'=>$this->formation['id']
+                       ));
+    
+    $this->jQuery()->addOnLoad("
+      $('.delete-formateur-link').click(function(){ 
+         var infos = $(this).attr('id').split(':');
+         $('#dialog').dialog('option', 'buttons', [ 
+                     { text: 'Supprimer', click: function() {
+                        document.location = '$url/id_formateur/'+infos[1]+'/id_session/'+infos[0];
+                      } 
+                     }, 
+                     { text: 'Annuler', click: function() { $(this).dialog( 'close' ); } } 
+                     ] );
+         $('#dialog').dialog('open');
+          
+         
+       });
+   ");
+    ?>
+
+
+<!-- Aside (Left Column) -->
+<div id="aside" class="box">
+
+    <?php echo $this->partial('common/formation_submenu.phtml',
+                               array('id_formation' => $this->formation['id'],
+                                     'type_formateur' => $this->formation['type_formateur']
+                                    )
+                             );
+?>
+
+</div> <!-- /aside -->
+
+<hr class="noscreen" />
+
+<!-- ***************** CONTENT (Right Column) **********************  -->
+<div id="content" class="box">
+
+    <!-- System Messages -->
+    <h4 class="tit">  Formateur interne &rsaquo; <?php echo $this->formation['intitule']; ?> </h4>
+    <!-- Flash Message -->
+    <?php echo $this->partial('common/flashMessage.phtml',
+                               array('message' => $this->fm, 'status'=>'done')
+                             );
+    ?>
+    
+    <div class="tabs box">
+        <ul>
+            <?php $i=1; foreach($this->sessions as $session) : ?>    
+            <li><a href="#tab_<?php echo $i;?>"><span>Session <?php echo $i++;?></span></a></li>
+            <?php endforeach;?>
+        </ul>
+    </div>
+    
+
+ <?php $j=1; 
+       //foreach(array_keys($this->auditeurs) as $auditeur)  : 
+       foreach($this->sessions as $session) : 
+ ?>    
+ <div id="tab_<?php echo $j;?>" class="col50s">
+    <h5> <?php $indice = $session['id'];
+               if(array_key_exists($indice,$this->formationInterne)) : 
+               echo count($this->formationInterne[$indice]);?> formateurs enregistrés</h5>
+    <p>
+    
+    <!-- Liste des formations  -->
+    <table class="list">
+        <tr>
+            <th>Formateur</th>
+            <th>Matricule</th>
+            <th>Direction</th>
+            <th>Fonction</th>
+            <th>Montant Horaire</th>
+            <th>Volume Horaire Session</th>
+            <th>Indemnité</th>
+            <th>&nbsp;</th>
+        <?php foreach($this->formationInterne[$indice] as $f) { ?>
+        <tr>
+            <td><?php echo $f['nom'].' '.$f['prenoms']; ?></td>
+            <td align="center"><?php echo $f['matricule']; ?></td>
+            <td align="center"><?php echo $f['direction']; ?></td>
+            <td><?php echo $f['fonction']; ?></td>
+            <td align="center"><?php echo $f['montant_horaire']; ?></td>
+            <td align="center"><?php echo $f['nombre_heure_jour']*$f['nombre_jour'].'h'; //this->volumeHoraireTotal.' h'; ?></td>
+            <td align="center"><?php echo number_format($f['montant_horaire']*$f['nombre_heure_jour']*$f['nombre_jour']); ?></td>
+            <td class="actions"> 
+                <a href="<?php echo $this->url(array('controller'=>'formation-interne', 'action' => 'edit', 
+                                                     'id_session'=>$session['id'], 
+                                                     'id_formation'=>$this->formation['id'], 
+                                                     'id_formateur'=>$f['id_personnel'])
+                        , null, true); ?>" class="edit">
+                    modifier
+                </a> &nbsp;
+                <a class="delete delete-formateur-link" href="#" id="<?php echo $session['id'].':'.$f['id_personnel'];?>">
+                    supprimer
+               </a>
+            </td>
+        </tr>
+        <?php } ?>
+    </table>
+    
+ </p>
+   <?php endif; ?>
+   
+   <!-- ACTION BAR -->
+    <?php //if(!$this->formationInterne) : ?>
+    <div class="actionBar">
+        <a href="<?php echo $this->url(array('controller' => 'formation-interne', 'action' => 'add', 'id_formation' =>$this->formation['id'],'id_session' =>$session['id']), null, true); ?>" class="add">
+           ajouter formateur S<?php echo $j++;?>
+        </a>
+    </div>
+    <?php //endif; ?>
+    
+ </div>
+    
+
+<?php endforeach;?>      
+    
+    
+    
+</div> <!-- /content -->
